@@ -1,15 +1,24 @@
 package com.example.android.rest_testing
 
+import android.app.Dialog
 import android.content.Intent
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.JsonObject
 import org.json.JSONObject
+import android.widget.PopupWindow
+
+import android.widget.LinearLayout
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.Window
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         val etRadius = findViewById<EditText>(R.id.etRadius)
         val etType = findViewById<EditText>(R.id.etType)
         val listView = findViewById<ListView>(R.id.lvJSONList)
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -57,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                         listView.adapter = arrayAdapter
                         listView.setOnItemClickListener { parent, view, position, id ->
                             val element = arrayAdapter.getItem(position)
-                            Toast.makeText(applicationContext, element.toString(), Toast.LENGTH_SHORT).show()
+                            showDialog(element.toString())
                         }
                     }
                     override fun onError(message: String) {
@@ -65,5 +75,20 @@ class MainActivity : AppCompatActivity() {
                     }
                 })
         }
+    }
+    private fun showDialog(title: String) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.popup)
+        val body = dialog.findViewById(R.id.tvPopup) as TextView
+        body.text = title
+        val btnSave = dialog.findViewById(R.id.btnSave) as Button
+        val btnMap = dialog.findViewById(R.id.btnMap) as Button
+        btnSave.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }
