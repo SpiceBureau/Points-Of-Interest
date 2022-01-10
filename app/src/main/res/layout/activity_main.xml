@@ -25,21 +25,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etLocation"
-        android:layout_width="290dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:ems="10"
-        android:hint="Location"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/lvJSONList"
-        app:layout_constraintEnd_toStartOf="@+id/btnSearch"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etType"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
         android:id="@+id/etRadius"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,11 +40,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
+        android:gravity="right"
         android:text="Search"
         app:layout_constraintBottom_toTopOf="@+id/lvJSONList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/etLocation"
-        android:gravity="right"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnLocation"
         app:layout_constraintTop_toBottomOf="@+id/etRadius" />
+
+    <Button
+        android:id="@+id/btnLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get location"
+        app:layout_constraintEnd_toStartOf="@+id/btnSearch"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etType" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
