@@ -14,7 +14,7 @@ class PlaceGetter constructor(private val context: Context){
 
     fun getStuff(type: String, location: String, radius: String, volleyResponseListener: VolleyResponseListener){
         val url =
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$location&radius=$radius&type=$type&key=AIzaSyCzERXhFAlFCdThBTQfboMUx6ajssHSxnA"
+            "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=45.8283431199498, 16.08856418358347&radius=1500&type=cafe&key=AIzaSyCzERXhFAlFCdThBTQfboMUx6ajssHSxnA"
 
         val request = JsonObjectRequest(Request.Method.GET, url, null, {
             volleyResponseListener.onResponse(it)

@@ -19,6 +19,8 @@ import android.widget.LinearLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import com.google.gson.JsonArray
+import org.json.JSONArray
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,18 +57,22 @@ class MainActivity : AppCompatActivity() {
                 radius.toString(),
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
-                        var listForShowing: MutableList<String> = mutableListOf<String>()
+                        val listOfNames: MutableList<String> = mutableListOf<String>()
+                        val listOfCoordinates: MutableList<Any> = mutableListOf()
                         val results = response.getJSONArray("results")
 
                         for (i in 0 until results.length()){
                             val jsonObject: JSONObject = results.getJSONObject(i)
-                            listForShowing.add(jsonObject.get("name").toString())
+                            listOfNames.add(jsonObject.get("name").toString())
+                            listOfCoordinates.add(jsonObject.get("geometry"))
                         }
 
-                        val arrayAdapter = ArrayAdapter(applicationContext, R.layout.listviewlayout, listForShowing)
+                        val arrayAdapter = ArrayAdapter(applicationContext, R.layout.listviewlayout, listOfNames)
                         listView.adapter = arrayAdapter
                         listView.setOnItemClickListener { parent, view, position, id ->
                             val element = arrayAdapter.getItem(position)
+                            val geometry = listOfCoordinates[id.toInt()]
+
                             showDialog(element.toString())
                         }
                     }
@@ -77,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun showDialog(title: String) {
+
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
@@ -88,6 +95,13 @@ class MainActivity : AppCompatActivity() {
         val btnMap = dialog.findViewById(R.id.btnMap) as Button
         btnSave.setOnClickListener {
             dialog.dismiss()
+        }
+        btnMap.setOnClickListener {
+            val mapsActivity = MapsActivity()
+            val intent = Intent(this, mapsActivity::class.java)
+            intent.putExtra("latitute", 34.8098080980)
+            intent.putExtra("longitude", 67.09098898)
+            startActivity(intent)
         }
         dialog.show()
     }
