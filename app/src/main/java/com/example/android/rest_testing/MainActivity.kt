@@ -5,22 +5,13 @@ import android.content.Intent
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
-import com.google.gson.JsonObject
 import org.json.JSONObject
-import android.widget.PopupWindow
 
-import android.widget.LinearLayout
-
-import android.view.LayoutInflater
-import android.view.View
 import android.view.Window
-import com.google.gson.JsonArray
-import org.json.JSONArray
+import com.google.android.gms.maps.model.LatLng
 
 
 class MainActivity : AppCompatActivity() {
@@ -57,23 +48,15 @@ class MainActivity : AppCompatActivity() {
                 radius.toString(),
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
-                        val listOfNames: MutableList<String> = mutableListOf<String>()
-                        val listOfCoordinates: MutableList<Any> = mutableListOf()
-                        val results = response.getJSONArray("results")
 
-                        for (i in 0 until results.length()){
-                            val jsonObject: JSONObject = results.getJSONObject(i)
-                            listOfNames.add(jsonObject.get("name").toString())
-                            listOfCoordinates.add(jsonObject.get("geometry"))
-                        }
+                        val placeInfo = PlaceInfo(response, applicationContext)
 
-                        val arrayAdapter = ArrayAdapter(applicationContext, R.layout.listviewlayout, listOfNames)
+                        val arrayAdapter = ArrayAdapter(applicationContext, R.layout.listviewlayout, placeInfo.getListOfNames())
                         listView.adapter = arrayAdapter
                         listView.setOnItemClickListener { parent, view, position, id ->
                             val element = arrayAdapter.getItem(position)
-                            val geometry = listOfCoordinates[id.toInt()]
-
-                            showDialog(element.toString())
+                            val loc = placeInfo.getLocation(id.toInt())
+                            showDialog(element.toString(), loc)
                         }
                     }
                     override fun onError(message: String) {
@@ -82,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                 })
         }
     }
-    private fun showDialog(title: String) {
+    private fun showDialog(title: String, loc: LatLng) {
 
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -100,8 +83,8 @@ class MainActivity : AppCompatActivity() {
         btnMap.setOnClickListener {
             val mapsActivity = MapsActivity()
             val intent = Intent(this, mapsActivity::class.java)
-            intent.putExtra("latitute", 34.8098080980)
-            intent.putExtra("longitude", 67.09098898)
+            intent.putExtra("latitute", loc.latitude)
+            intent.putExtra("longitude", loc.longitude)
             startActivity(intent)
         }
         dialog.show()
