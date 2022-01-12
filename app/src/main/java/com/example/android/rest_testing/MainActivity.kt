@@ -16,14 +16,6 @@ import com.google.android.gms.maps.model.LatLng
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var lastLocation: Location
-
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,8 +26,6 @@ class MainActivity : AppCompatActivity() {
         val etType = findViewById<EditText>(R.id.etType)
         val listView = findViewById<ListView>(R.id.lvJSONList)
 
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         btnSearch.setOnClickListener {
             val type = etType.text
