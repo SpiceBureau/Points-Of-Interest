@@ -93,7 +93,8 @@ class MainActivity : AppCompatActivity() {
         body.text = title
         val btnSave = dialog.findViewById(R.id.btnSave) as Button
         val btnMap = dialog.findViewById(R.id.btnMap) as Button
-        btnSave.setOnClickListener {
+        val btnX = dialog.findViewById(R.id.btnExit) as Button
+        btnX.setOnClickListener {
             dialog.dismiss()
         }
         btnMap.setOnClickListener {
