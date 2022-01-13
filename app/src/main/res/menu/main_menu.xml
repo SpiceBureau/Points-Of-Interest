@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/pointOfInterestSearch"
+            android:icon="@drawable/ic_baseline_search_24"
+            android:title="Search for places" />
+        <item
+            android:id="@+id/myPointOfInterest"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="My points of interest" />
+    </group>
+</menu>
