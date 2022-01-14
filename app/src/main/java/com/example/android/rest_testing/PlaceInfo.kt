@@ -3,15 +3,22 @@ package com.example.android.rest_testing
 import android.content.Context
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
+import org.json.JSONException
 import org.json.JSONObject
 
-class PlaceInfo(response: JSONObject, context: Context){
+class PlaceInfo(response: JSONObject, val context: Context){
     val listOfNames: MutableList<String> = mutableListOf<String>()
     val listOfCoordinates: MutableList<Any> = mutableListOf()
     val results = response.getJSONArray("results")
-    val context = context
 
     init {
+        try {
+            val nextPageToken: String = response.getString("next_page_token")
+        }
+        catch (e: JSONException){
+            val nextPageToken: String = "null"
+        }
+
         for (i in 0 until results.length()){
             val jsonObject: JSONObject = results.getJSONObject(i)
             listOfNames.add(jsonObject.get("name").toString())
