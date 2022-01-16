@@ -12,9 +12,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONObject
+import com.android.volley.Request
+import com.android.volley.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -126,11 +129,25 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        /*btnSave.setOnClickListener {
-            Kad se ovaj button clickne trebao bi se odabrani item saveati (spremiti naziv, lokoacija i tip lokacije,
-                                                                        naziv i lokacija dobije ova funkcija kao parametre,
-                                                                        a tip dobijete iz etType.text)
-        }*/
+        //lokacija se sprema ako je pokrenut json-server i postoji json file sa praznim poljem-> {favourites:[]}
+        //zasad se spremaju samo naziv i lokacije, tip nisam uspio izvući, dobivam prazan string
+        btnSave.setOnClickListener {
+            val location = JSONObject()
+            location.put("latitude", loc.latitude)
+            location.put("longitude", loc.longitude)
+            val place = JSONObject()
+            place.put("name", title)
+            place.put("location", location)
+
+            val url = "http://10.0.2.2:3000/favourites" //10.0.2.2 je adresa računala kad se pokrene emulator
+
+            val request = JsonObjectRequest(Request.Method.POST, url, place,
+                { response ->
+                    System.out.println(response)
+                },
+                { error -> System.out.println(error) })
+            MySingleton.getInstance(this).addToRequestQueue(request)
+        }
         dialog.show()
     }
 }
