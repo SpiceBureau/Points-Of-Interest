@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //lokacija se sprema ako je pokrenut json-server i postoji json file sa praznim poljem-> {favourites:[]}
+        //lokacija se sprema ako je pokrenut json-server i postoji json file sa praznim poljem-> {favorites:[]}
         //zasad se spremaju samo naziv i lokacije, tip nisam uspio izvući, dobivam prazan string
         btnSave.setOnClickListener {
             val location = JSONObject()
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             place.put("name", title)
             place.put("location", location)
 
-            val url = "http://10.0.2.2:3000/favourites" //10.0.2.2 je adresa računala kad se pokrene emulator
+            val url = "http://10.0.2.2:3000/favorites" //10.0.2.2 je adresa računala kad se pokrene emulator
 
             val request = JsonObjectRequest(Request.Method.POST, url, place,
                 { response ->
