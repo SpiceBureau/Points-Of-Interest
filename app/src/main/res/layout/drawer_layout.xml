@@ -46,18 +46,21 @@
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="209dp"
+            android:layout_width="100dp"
             android:layout_height="44dp"
+            android:layout_marginStart="10dp"
             android:layout_marginBottom="6dp"
+            android:gravity="right"
             app:layout_constraintBottom_toTopOf="@+id/etLocation"
             app:layout_constraintEnd_toStartOf="@id/seekBar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <SeekBar
             android:id="@+id/seekBar"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="200dp"
+            android:layout_width="265dp"
             android:layout_height="40dp"
             android:max="30000"
             android:progress="10"

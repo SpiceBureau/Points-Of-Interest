@@ -217,6 +217,7 @@ class MainActivity : AppCompatActivity() {
                                                                         naziv i lokacija dobije ova funkcija kao parametre,
                                                                         a tip dobijete iz etType.text)
         }*/
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.show()
     }
 }
