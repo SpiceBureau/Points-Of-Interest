@@ -112,14 +112,14 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.pointOfInterestSearch -> Toast.makeText(
                     applicationContext,
-                    "Points of interest search",
+                    "Already on this screen",
                     Toast.LENGTH_SHORT
                 ).show()
-                R.id.myPointOfInterest -> Toast.makeText(
-                    applicationContext,
-                    "My points of interest",
-                    Toast.LENGTH_SHORT
-                ).show()
+                R.id.myPointOfInterest -> {
+                    val savedPOIActivity = SavedPOIActivity()
+                    val intent = Intent(this, savedPOIActivity::class.java)
+                    startActivity(intent)
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
