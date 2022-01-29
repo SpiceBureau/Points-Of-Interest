@@ -2,14 +2,17 @@ package com.example.android.rest_testing
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Gravity
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.android.volley.toolbox.JsonObjectRequest
@@ -17,25 +20,29 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONObject
 import com.android.volley.Request
-import com.android.volley.Response
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var actionBarToggle: ActionBarDrawerToggle
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.drawer_layout)
 
         val btnSearch = findViewById<Button>(R.id.btnSearch)
-        val etLocation = findViewById<EditText>(R.id.etLocation)
+        val btnGetLoc = findViewById<Button>(R.id.btnGetLoc)
         val slider = findViewById<SeekBar>(R.id.seekBar)
         val spinner = findViewById<Spinner>(R.id.spinner)
         val listView = findViewById<ListView>(R.id.lvJSONList)
+        val tvForSpinner = findViewById<TextView>(R.id.tvForSpinner)
+        val tvForSeeker = findViewById<TextView>(R.id.tvForSeeker)
 
         var typeForSearch: String = "null"
-        var distance: String = "null"
+        var distance: String = "0"
 
         val spinnerArray = listOf<String>(
             "airport",
@@ -78,6 +85,8 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         val navigationView: NavigationView = findViewById(R.id.navigationView)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
+
         ArrayAdapter.createFromResource(  //spinner stuff
             this,
             R.array.planets_array,
@@ -119,6 +128,7 @@ class MainActivity : AppCompatActivity() {
                     val savedPOIActivity = SavedPOIActivity()
                     val intent = Intent(this, savedPOIActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -141,23 +151,30 @@ class MainActivity : AppCompatActivity() {
 
         slider.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {}
+            override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
+                tvForSeeker.text = "Distance = " + seek.progress + " m"
+            }
 
-            override fun onStartTrackingTouch(seek: SeekBar) {}
+            override fun onStartTrackingTouch(seek: SeekBar) {
+                Toast.makeText(applicationContext, "Tip: You can manually enter the distance by clicking the 'Distance' text", Toast.LENGTH_LONG).show()
+            }
 
             override fun onStopTrackingTouch(seek: SeekBar) {
-                Toast.makeText(applicationContext, "Progress is: " + seek.progress + "%", Toast.LENGTH_SHORT).show()
                 distance = seek.progress.toString()
             }
         })
 
+        btnGetLoc.setOnClickListener{
+            getLastKnownLocation()
+        }
+
         btnSearch.setOnClickListener { //search button
-            val location = etLocation.text
+            val tvLocation = findViewById<TextView>(R.id.tvLocation)
             val placegetter = PlaceGetter(applicationContext)
             placegetter.getStuff(
                 typeForSearch,
                 distance,
-                location.toString(),
+                tvLocation.text as String,
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
 
@@ -180,6 +197,26 @@ class MainActivity : AppCompatActivity() {
                     }
                 })
         }
+        tvForSeeker.setOnClickListener{
+            val dialog_distance = Dialog(this)
+            dialog_distance.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+            dialog_distance.setCancelable(true)
+            dialog_distance.setContentView(R.layout.popup_for_distance_input)
+
+            val distanceInput = dialog_distance.findViewById<EditText>(R.id.etPopupDistance)
+            distanceInput.setOnEditorActionListener { v, actionId, event ->
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    tvForSeeker.text = "Distance = " + distanceInput.text + " m"
+                    dialog_distance.dismiss()
+                    true
+                } else {
+                    false
+                }
+            }
+
+            dialog_distance.show()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean { // burger and back button for drawer
@@ -191,18 +228,18 @@ class MainActivity : AppCompatActivity() {
         // Handle your other action bar items...
     }
 
-    private fun showDialog(title: String, loc: LatLng) { // popup window stuff
+    private fun showDialog(title: String, loc: LatLng) { // popupForListView window stuff
 
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.popup)
+        dialog.setContentView(R.layout.popup_for_lv)
         val body = dialog.findViewById(R.id.tvPopup) as TextView
         body.text = title
         val btnSave = dialog.findViewById(R.id.btnSave) as Button
         val btnMap = dialog.findViewById(R.id.btnMap) as Button
-        val btnX = dialog.findViewById(R.id.btnExit) as Button
+        val btnX = dialog.findViewById(R.id.btnExt) as ImageButton
         btnX.setOnClickListener {
             dialog.dismiss()
         }
@@ -224,15 +261,39 @@ class MainActivity : AppCompatActivity() {
             place.put("name", title)
             place.put("location", location)
 
-            val url = "http://10.0.2.2:3000/favorites" //10.0.2.2 je adresa računala kad se pokrene emulator
+            val url =
+                "http://10.0.2.2:3000/favorites" //10.0.2.2 je adresa računala kad se pokrene emulator
 
             val request = JsonObjectRequest(Request.Method.POST, url, place,
                 { response ->
-                    System.out.println(response)
+                    println(response)
                 },
-                { error -> System.out.println(error) })
+                { error -> println(error) })
             MySingleton.getInstance(this).addToRequestQueue(request)
         }
         dialog.show()
+    }
+
+    private fun getLastKnownLocation() {
+        var lastLoc: LatLng
+        val tvLocation = findViewById<TextView>(R.id.tvLocation)
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                MapsActivity.LOCATION_PERMISSION_REQUEST_CODE
+            )
+            tvLocation.text = "Click the button again"
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location->
+                if (location != null) {
+                    lastLoc = LatLng(location.latitude, location.longitude)
+                    tvLocation.text = lastLoc.latitude.toString() + ", " + lastLoc.longitude.toString()
+                }
+
+            }
+
     }
 }

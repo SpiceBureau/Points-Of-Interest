@@ -14,6 +14,16 @@ class LoadingActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         Handler(Looper.getMainLooper()).postDelayed({
+            /*val bundle = intent.extras
+            var s:String? = null
+            s = bundle!!.getString("key1", "Default")
+
+            if (s == "SavedPOIActivity"){
+                val mainActivity = MainActivity()
+                val intent = Intent(this, mainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }*/
             val mainActivity = MainActivity()
             val intent = Intent(this, mainActivity::class.java)
             startActivity(intent)

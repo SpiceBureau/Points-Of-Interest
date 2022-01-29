@@ -10,13 +10,13 @@ class PlaceInfo(response: JSONObject, val context: Context){
     val listOfNames: MutableList<String> = mutableListOf<String>()
     val listOfCoordinates: MutableList<Any> = mutableListOf()
     val results = response.getJSONArray("results")
+    var nextPageToken: String = "null"
 
     init {
-        try {
-            val nextPageToken: String = response.getString("next_page_token")
-        }
-        catch (e: JSONException){
-            val nextPageToken: String = "null"
+        nextPageToken = try {
+            response.getString("next_page_token")
+        } catch (e: JSONException){
+            "null"
         }
 
         for (i in 0 until results.length()){
