@@ -296,7 +296,7 @@ class MainActivity : AppCompatActivity() {
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                MapsActivity.LOCATION_PERMISSION_REQUEST_CODE
+                MapsActivity2.LOCATION_PERMISSION_REQUEST_CODE
             )
             tvLocation.text = "Click the button again"
             return
