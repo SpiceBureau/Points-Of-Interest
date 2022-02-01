@@ -2,17 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="400dp"
+    android:layout_width="350dp"
     android:layout_height="150dp"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_corners">
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:backgroundTint="#3F51B5"
         android:layout_marginRight="5dp"
         android:text="Spremi point of interest"
+        android:textColor="@color/white"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,19 +34,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <!--<Button
         android:id="@+id/btnMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:backgroundTint="#3F51B5"
         android:layout_marginRight="5dp"
+        android:textColor="@color/white"
         android:text="Pokaži na mapi"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSave"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPopup" />
+        app:layout_constraintTop_toBottomOf="@+id/tvPopup" />-->
+
+
+    <ImageButton
+        android:id="@+id/btnMap"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="79dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="26dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icons8_globe_64" />
 
     <ImageButton
         android:id="@+id/btnExt"

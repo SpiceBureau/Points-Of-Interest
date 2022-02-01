@@ -3,8 +3,9 @@ package com.example.android.rest_testing
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
@@ -12,9 +13,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
@@ -31,15 +35,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.drawer_layout)
+        setContentView(R.layout.main_actiity_layout)
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         val btnSearch = findViewById<Button>(R.id.btnSearch)
         val btnGetLoc = findViewById<Button>(R.id.btnGetLoc)
         val slider = findViewById<SeekBar>(R.id.seekBar)
         val spinner = findViewById<Spinner>(R.id.spinner)
-        val listView = findViewById<ListView>(R.id.lvJSONList)
-        val tvForSpinner = findViewById<TextView>(R.id.tvForSpinner)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val tvForSeeker = findViewById<TextView>(R.id.tvForSeeker)
+
 
         var typeForSearch: String = "null"
         var distance: String = "0"
@@ -149,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-        slider.setOnSeekBarChangeListener(object :
+        slider.setOnSeekBarChangeListener(object : // Distance slider
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seek: SeekBar, progress: Int, fromUser: Boolean) {
                 tvForSeeker.text = "Distance = " + seek.progress + " m"
@@ -166,7 +172,7 @@ class MainActivity : AppCompatActivity() {
 
         btnGetLoc.setOnClickListener{
             getLastKnownLocation()
-        }
+        } // Get location btn
 
         btnSearch.setOnClickListener { //search button
             val tvLocation = findViewById<TextView>(R.id.tvLocation)
@@ -177,10 +183,18 @@ class MainActivity : AppCompatActivity() {
                 tvLocation.text as String,
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
-
                         val placeInfo = PlaceInfo(response, applicationContext)
+                        val adapter = ItemAdapter(placeInfo.getListOfNames(), placeInfo.listOfCoordinates){ latlng ->
+                            val mapsActivity = MapsActivity2()
+                            val intent = Intent(this@MainActivity, mapsActivity::class.java)
+                            intent.putExtra("latitude", latlng.latitude)
+                            intent.putExtra("longitude", latlng.longitude)
+                            startActivity(intent)
+                        }
 
-                        val arrayAdapter = ArrayAdapter(
+                        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+                        recyclerView.adapter = adapter
+                        /*val arrayAdapter = ArrayAdapter(
                             applicationContext,
                             R.layout.listviewlayout,
                             placeInfo.getListOfNames()
@@ -190,7 +204,7 @@ class MainActivity : AppCompatActivity() {
                             val element = arrayAdapter.getItem(position)
                             val loc = placeInfo.getLocation(id.toInt())
                             showDialog(element.toString(), loc)
-                        }
+                        }*/
                     }
                     override fun onError(message: String) {
                         Toast.makeText(applicationContext, "Didn't work", Toast.LENGTH_SHORT).show()
@@ -238,15 +252,15 @@ class MainActivity : AppCompatActivity() {
         val body = dialog.findViewById(R.id.tvPopup) as TextView
         body.text = title
         val btnSave = dialog.findViewById(R.id.btnSave) as Button
-        val btnMap = dialog.findViewById(R.id.btnMap) as Button
+        val btnMap = dialog.findViewById(R.id.btnMap) as ImageButton
         val btnX = dialog.findViewById(R.id.btnExt) as ImageButton
         btnX.setOnClickListener {
             dialog.dismiss()
         }
         btnMap.setOnClickListener {
-            val mapsActivity = MapsActivity()
+            val mapsActivity = MapsActivity2()
             val intent = Intent(this, mapsActivity::class.java)
-            intent.putExtra("latitute", loc.latitude)
+            intent.putExtra("latitude", loc.latitude)
             intent.putExtra("longitude", loc.longitude)
             startActivity(intent)
         }
@@ -271,6 +285,7 @@ class MainActivity : AppCompatActivity() {
                 { error -> println(error) })
             MySingleton.getInstance(this).addToRequestQueue(request)
         }
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
 
@@ -294,6 +309,5 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-
     }
 }

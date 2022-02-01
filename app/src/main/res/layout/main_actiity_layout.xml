@@ -13,9 +13,9 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <ListView
-            android:id="@+id/lvJSONList"
-            android:background="@color/quantum_white_secondary_text"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:background="@color/places_autocomplete_prediction_primary_text"
             android:layout_width="409dp"
             android:layout_height="465dp"
             android:windowSoftInputMode="adjustPan"

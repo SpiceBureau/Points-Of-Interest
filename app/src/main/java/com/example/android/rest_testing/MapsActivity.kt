@@ -13,6 +13,7 @@ import com.example.android.rest_testing.databinding.ActivityMapsBinding
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -23,7 +24,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var lastLocation: Location
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -45,19 +45,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         val intent1 = intent
-        val lat = intent1.getDoubleExtra("latitute", 0.0)
+        val lat = intent1.getDoubleExtra("latitude", 0.0)
         val lng = intent1.getDoubleExtra("longitude", 0.0)
 
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
         val markerForMap = LatLng(lat, lng)
         val zoomLevel = 14.5f //This goes up to 21
 
-        mMap.addMarker(MarkerOptions().position(markerForMap).title("Marker in Sydney"))
+        mMap.addMarker(MarkerOptions().position(markerForMap))
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(markerForMap, zoomLevel))
 
-        setUpMap()
+        /*setUpMap()*/
     }
 
     private fun setUpMap() {
@@ -68,17 +67,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
         mMap.isMyLocationEnabled = true
-
-// 2
-        /*fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            // Got last known location. In some rare situations this can be null.
-            // 3
-            if (location != null) {
-                lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-            }
-        }*/
     }
 
 }
