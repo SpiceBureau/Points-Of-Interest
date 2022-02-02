@@ -1,16 +1,14 @@
 package com.example.android.rest_testing
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
+import android.location.Location
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
@@ -18,16 +16,19 @@ import com.google.android.gms.maps.model.LatLng
 import org.json.JSONObject
 
 
-class ItemAdapter(iL: List<String>, locL: List<Any>, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter(iL: List<String>, locL: List<Any>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     private val itemList = iL
     private val listOfCoordinates = locL
     private val context = cnt
+    private val locationList = locL
+    private val userLocationString = userLoc
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val itemTitle: TextView = itemView.findViewById(R.id.tvItemTitle)
         val btnMap = itemView.findViewById<ImageButton>(R.id.btnMap)
         val btnSave = itemView.findViewById<ImageButton>(R.id.btnSave)
+        val tvDistance = itemView.findViewById<TextView>(R.id.tvDistance)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,10 +39,24 @@ class ItemAdapter(iL: List<String>, locL: List<Any>, cnt: Context, val itemClick
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemTitle.text = itemList[position]
 
+        val itemLocationJSON = locationList[position] as JSONObject
+        val userLocationAsList: List<String> = userLocationString.split(",").map { it -> it.trim() }
+
+        val itemLocation = Location("Item location")
+        itemLocation.latitude = itemLocationJSON.get("lat").toString().toDouble()
+        itemLocation.longitude = itemLocationJSON.get("lng").toString().toDouble()
+
+        val userLocation = Location("User location")
+        userLocation.latitude = userLocationAsList[0].toDouble()
+        userLocation.longitude = userLocationAsList[1].toDouble()
+
+        holder.tvDistance.text = "Distance = " + itemLocation.distanceTo(userLocation).toInt().toString() +" m"
+
+        val cardView: CardView = holder.itemView.findViewById(R.id.cardView)
         if (position % 2 == 0)
-            holder.itemView.setBackgroundColor(Color.parseColor("#B3FFFFFF"))
+            cardView.setCardBackgroundColor(Color.parseColor("#B3FFFFFF"))
         else
-            holder.itemView.setBackgroundColor(Color.parseColor("#f0f0f0"))
+            cardView.setCardBackgroundColor(Color.parseColor("#f0f0f0"))
 
         val latLng = listOfCoordinates[position] as JSONObject
 

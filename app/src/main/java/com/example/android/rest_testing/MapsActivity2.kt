@@ -1,5 +1,7 @@
 package com.example.android.rest_testing
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -43,6 +45,7 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
     }
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         val intent1 = intent
         val lat = intent1.getDoubleExtra("latitude", 0.0)
@@ -55,5 +58,7 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.addMarker(MarkerOptions().position(markerForMap))
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(markerForMap, zoomLevel))
+
+        /*mMap.isMyLocationEnabled = true*/
     }
 }

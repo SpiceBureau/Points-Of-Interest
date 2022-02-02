@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
                         val placeInfo = PlaceInfo(response, applicationContext)
-                        val adapter = ItemAdapter(placeInfo.getListOfNames(), placeInfo.listOfCoordinates, this@MainActivity){ latlng ->
+                        val adapter = ItemAdapter(placeInfo.getListOfNames(), placeInfo.listOfCoordinates, tvLocation.text as String, this@MainActivity){ latlng ->
                             val mapsActivity = MapsActivity2()
                             val intent = Intent(this@MainActivity, mapsActivity::class.java)
                             intent.putExtra("latitude", latlng.latitude)
