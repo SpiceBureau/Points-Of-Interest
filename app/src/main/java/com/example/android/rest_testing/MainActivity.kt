@@ -184,27 +184,15 @@ class MainActivity : AppCompatActivity() {
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
                         val placeInfo = PlaceInfo(response, applicationContext)
-                        val adapter = ItemAdapter(placeInfo.getListOfNames(), placeInfo.listOfCoordinates){ latlng ->
+                        val adapter = ItemAdapter(placeInfo.getListOfNames(), placeInfo.listOfCoordinates, this@MainActivity){ latlng ->
                             val mapsActivity = MapsActivity2()
                             val intent = Intent(this@MainActivity, mapsActivity::class.java)
                             intent.putExtra("latitude", latlng.latitude)
                             intent.putExtra("longitude", latlng.longitude)
                             startActivity(intent)
                         }
-
                         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
                         recyclerView.adapter = adapter
-                        /*val arrayAdapter = ArrayAdapter(
-                            applicationContext,
-                            R.layout.listviewlayout,
-                            placeInfo.getListOfNames()
-                        )
-                        listView.adapter = arrayAdapter
-                        listView.setOnItemClickListener { parent, view, position, id ->
-                            val element = arrayAdapter.getItem(position)
-                            val loc = placeInfo.getLocation(id.toInt())
-                            showDialog(element.toString(), loc)
-                        }*/
                     }
                     override fun onError(message: String) {
                         Toast.makeText(applicationContext, "Didn't work", Toast.LENGTH_SHORT).show()
@@ -222,13 +210,13 @@ class MainActivity : AppCompatActivity() {
             distanceInput.setOnEditorActionListener { v, actionId, event ->
                 if(actionId == EditorInfo.IME_ACTION_DONE){
                     tvForSeeker.text = "Distance = " + distanceInput.text + " m"
+                    distance = distanceInput.text.toString()
                     dialog_distance.dismiss()
                     true
                 } else {
                     false
                 }
             }
-
             dialog_distance.show()
         }
     }
@@ -240,53 +228,6 @@ class MainActivity : AppCompatActivity() {
             true
         } else super.onOptionsItemSelected(item)
         // Handle your other action bar items...
-    }
-
-    private fun showDialog(title: String, loc: LatLng) { // popupForListView window stuff
-
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.popup_for_lv)
-        val body = dialog.findViewById(R.id.tvPopup) as TextView
-        body.text = title
-        val btnSave = dialog.findViewById(R.id.btnSave) as Button
-        val btnMap = dialog.findViewById(R.id.btnMap) as ImageButton
-        val btnX = dialog.findViewById(R.id.btnExt) as ImageButton
-        btnX.setOnClickListener {
-            dialog.dismiss()
-        }
-        btnMap.setOnClickListener {
-            val mapsActivity = MapsActivity2()
-            val intent = Intent(this, mapsActivity::class.java)
-            intent.putExtra("latitude", loc.latitude)
-            intent.putExtra("longitude", loc.longitude)
-            startActivity(intent)
-        }
-
-        //lokacija se sprema ako je pokrenut json-server i postoji json file sa praznim poljem-> {favorites:[]}
-        //zasad se spremaju samo naziv i lokacije, tip nisam uspio izvući, dobivam prazan string
-        btnSave.setOnClickListener {
-            val location = JSONObject()
-            location.put("latitude", loc.latitude)
-            location.put("longitude", loc.longitude)
-            val place = JSONObject()
-            place.put("name", title)
-            place.put("location", location)
-
-            val url =
-                "http://10.0.2.2:3000/favorites" //10.0.2.2 je adresa računala kad se pokrene emulator
-
-            val request = JsonObjectRequest(Request.Method.POST, url, place,
-                { response ->
-                    println(response)
-                },
-                { error -> println(error) })
-            MySingleton.getInstance(this).addToRequestQueue(request)
-        }
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
     }
 
     private fun getLastKnownLocation() {
