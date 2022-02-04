@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,8 +13,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val btnEnterApp = findViewById<Button>(R.id.btnEnterApp)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val btnRegister = findViewById<Button>(R.id.btnRegister)
+//        val btnLogin = findViewById<Button>(R.id.btnLogin)
+//        val btnRegister = findViewById<Button>(R.id.btnRegister)
         val LoginScreen = findViewById<ConstraintLayout>(R.id.LoginScreen)
 
         btnEnterApp.setOnClickListener {
@@ -22,12 +23,21 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnLogin.setOnClickListener {
-            LoginScreen.removeView(it)
+        loginButton.setOnClickListener {
+
         }
 
-        btnRegister.setOnClickListener {
-            LoginScreen.removeView(it)
+        registerButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
+
+//        btnLogin.setOnClickListener {
+//            LoginScreen.removeView(it)
+//        }
+//
+//        btnRegister.setOnClickListener {
+//            LoginScreen.removeView(it)
+//        }
     }
 }
