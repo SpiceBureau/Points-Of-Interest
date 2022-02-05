@@ -57,6 +57,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation("com.android.volley:volley:1.2.1")
 
+    implementation 'com.squareup.retrofit:retrofit:1.9.0'
+    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    implementation 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
+
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
