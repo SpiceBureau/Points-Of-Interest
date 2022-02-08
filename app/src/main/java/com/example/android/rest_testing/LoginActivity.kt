@@ -30,23 +30,31 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             val userName = userNameEditText.text.toString()
             val password = passwordEditText.text.toString()
-            val user = UserShort(userName, password)
-            val rest = RestFactory.instance
-            CoroutineScope(Dispatchers.IO).launch {
-                val result = rest.loginUser(user)
-                withContext(Dispatchers.Main){
-                    if(result){
-                        val loadingActivity = LoadingActivity()
-                        val intent = Intent(this@LoginActivity, loadingActivity::class.java)
-                        startActivity(intent)
-                    }
-                    else{
-                        val toast = Toast.makeText(this@LoginActivity, "Login failed: wrong username or password.", Toast.LENGTH_LONG)
-                        toast.show()
+            if(userName == "" || password == ""){
+                val toast = Toast.makeText(this, "All fields must be filled.", Toast.LENGTH_LONG)
+                toast.show()
+            }
+            else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val user = UserShort(userName, password)
+                    val rest = RestFactory.instance
+                    val result = rest.loginUser(user)
+                    withContext(Dispatchers.Main) {
+                        if (result) {
+                            val loadingActivity = LoadingActivity()
+                            val intent = Intent(this@LoginActivity, loadingActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            val toast = Toast.makeText(
+                                this@LoginActivity,
+                                "Login failed: wrong username or password.",
+                                Toast.LENGTH_LONG
+                            )
+                            toast.show()
+                        }
                     }
                 }
             }
-
         }
 
         registerButton.setOnClickListener {

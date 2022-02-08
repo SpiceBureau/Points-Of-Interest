@@ -1,6 +1,7 @@
 package com.example.android.rest_testing.net.retrofit
 
 import android.util.Log
+import com.example.android.rest_testing.entity.User
 import com.example.android.rest_testing.entity.UserShort
 import com.example.android.rest_testing.net.RestFactory
 import com.example.android.rest_testing.net.RestInterface
@@ -23,6 +24,18 @@ class RestRetrofit: RestInterface {
         try {
             var loggedUser = userService.loginUser(user)
             println(loggedUser)
+            return true
+        }
+        catch (ex: Exception) {
+            Log.d("custom", ""+ex.toString());
+        }
+        return false
+    }
+
+    override fun registerUser(user: User): Boolean {
+        try{
+            var registeredUser = userService.registerUser(user)
+            println(registeredUser)
             return true
         }
         catch (ex: Exception) {
