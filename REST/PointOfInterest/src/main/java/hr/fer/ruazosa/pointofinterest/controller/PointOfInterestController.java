@@ -125,7 +125,7 @@ public class PointOfInterestController {
     }
 
 
-    @PostMapping("/getPlaces")
+    @GetMapping("/getPlaces")
     public ResponseEntity<Object> getPlaces(@RequestBody UserFromIndexToIndexDTO userFromIndexToIndexDTO) {
         ResponseEntity<Object> loginResponse = this.loginUser(userFromIndexToIndexDTO.getUser());
         if (loginResponse.getStatusCode() != HttpStatus.OK)
@@ -142,7 +142,7 @@ public class PointOfInterestController {
         return new ResponseEntity<Object>(resultPlaces, HttpStatus.OK);
     }
 
-    @PostMapping("/countPlaces")
+    @GetMapping("/countPlaces")
     public ResponseEntity<Object> countPlaces(@RequestBody User user) {
         ResponseEntity<Object> loginResponse = this.loginUser(user);
         if (loginResponse.getStatusCode() != HttpStatus.OK)
