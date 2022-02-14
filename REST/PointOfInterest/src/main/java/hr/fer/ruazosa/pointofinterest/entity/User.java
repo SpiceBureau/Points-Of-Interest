@@ -1,8 +1,11 @@
-package hr.fer.ruazosa.pointofinterest;
+package hr.fer.ruazosa.pointofinterest.entity;
+
+import hr.fer.ruazosa.pointofinterest.entity.Place;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,19 +15,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long id;
-    @NotBlank(message = "First name cannot be emtpy")
+    @NotBlank(message = "First name cannot be empty")
     @Column(name = "first_name")
     private String firstName;
-    @NotBlank(message = "Last name cannot be emtpy")
+    @NotBlank(message = "Last name cannot be empty")
     @Column(name = "last_name")
     private String lastName;
     @Email(message = "Email not in correct format")
     @Column(name = "e_mail")
     private String email;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Place> places = new ArrayList<>();
+
+    public boolean addPlace(Place place) { return places.add(place); }
+
+    public boolean removePlace(Place place) { return places.remove(place); }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -46,9 +52,9 @@ public class User {
         this.password = password;
     }
 
-    @NotBlank(message = "username name cannot be emtpy")
+    @NotBlank(message = "username name cannot be empty")
     private String username;
-    @NotBlank(message = "Password name cannot be emtpy")
+    @NotBlank(message = "Password name cannot be empty")
     private String password;
 
     public Long getId() {
