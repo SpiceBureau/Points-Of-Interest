@@ -8,16 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
+import com.example.android.rest_testing.entity.Place
+import com.example.android.rest_testing.entity.UserPlace
+import com.example.android.rest_testing.entity.UserShort
+import com.example.android.rest_testing.net.RestFactory
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class ItemAdapter(iL: List<String>, locL: List<Any>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter(type:String, userShort: UserShort, iL: List<String>, locL: List<Any>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
+    private val locationType = type
+    private val user = userShort
     private val itemList = iL
     private val listOfCoordinates = locL
     private val context = cnt
@@ -64,24 +75,22 @@ class ItemAdapter(iL: List<String>, locL: List<Any>, userLoc: String, cnt: Conte
             itemClick(LatLng(latLng.get("lat") as Double, latLng.get("lng") as Double))
         }
         holder.btnSave.setOnClickListener {
-            val location = JSONObject()
-            location.put("latitude", latLng.get("lat"))
-            location.put("longitude", latLng.get("lng"))
-            val place = JSONObject()
-            place.put("name", itemList[position])
-            place.put("location", location)
-
-            val url =
-                "http://localhost:3000/favorites" //10.0.2.2 je adresa računala kad se pokrene emulator
-
-            val request = JsonObjectRequest(
-                Request.Method.POST, url, place,
-                { response ->
-                    println(response)
-                },
-                { error ->
-                    println(error) })
-            MySingleton.getInstance(context).addToRequestQueue(request)
+            CoroutineScope(Dispatchers.IO).launch {
+                val rest = RestFactory.instance
+                val place = Place(holder.itemTitle.text as String, locationType, itemLocation.latitude, itemLocation.longitude)
+                val userPlace = UserPlace(user, place)
+                val result = rest.savePlace(userPlace)
+                withContext(Dispatchers.Main) {
+                    if (result) {
+                        val toast = Toast.makeText(context, "Location saved.", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                    else{
+                        val toast = Toast.makeText(context, "Location already saved.", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                }
+            }
         }
     }
 

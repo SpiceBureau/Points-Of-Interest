@@ -43,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
                         if (result) {
                             val loadingActivity = LoadingActivity()
                             val intent = Intent(this@LoginActivity, loadingActivity::class.java)
+                            intent.putExtra("user", user)
                             startActivity(intent)
                         } else {
                             val toast = Toast.makeText(

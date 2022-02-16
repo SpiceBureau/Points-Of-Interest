@@ -6,7 +6,7 @@ import hr.fer.ruazosa.pointofinterest.DTO.UserPlaceDTO;
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.service.IPointOfInterestService;
 import hr.fer.ruazosa.pointofinterest.entity.User;
-import jdk.nashorn.internal.ir.ObjectNode;
+//import jdk.nashorn.internal.ir.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -95,7 +95,7 @@ public class PointOfInterestController {
         if (returnPlace == null){
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("error", "place can not be added");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<Object>(body, HttpStatus.CONFLICT);
         }
 
         return new ResponseEntity<Object>(returnPlace, HttpStatus.OK);
@@ -125,7 +125,7 @@ public class PointOfInterestController {
     }
 
 
-    @GetMapping("/getPlaces")
+    @PostMapping("/getPlaces")
     public ResponseEntity<Object> getPlaces(@RequestBody UserFromIndexToIndexDTO userFromIndexToIndexDTO) {
         ResponseEntity<Object> loginResponse = this.loginUser(userFromIndexToIndexDTO.getUser());
         if (loginResponse.getStatusCode() != HttpStatus.OK)

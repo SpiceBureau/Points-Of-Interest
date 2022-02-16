@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-
         <entry key="..\:/Users/Daniel/Documents/android_workspace/zavrsni rad/AndroidProjekt/app/src/main/res/layout/activity_login.xml" value="0.16621376811594202" />
         <entry key="..\:/Users/Daniel/Documents/android_workspace/zavrsni rad/AndroidProjekt/app/src/main/res/layout/activity_register.xml" value="0.16621376811594202" />
+        <entry key="..\:/Users/Daniel/Documents/android_workspace/zavrsni rad/AndroidProjekt/app/src/main/res/layout/activity_saved_poiactivity.xml" value="0.16621376811594202" />
+        <entry key="..\:/Users/Daniel/Documents/android_workspace/zavrsni rad/AndroidProjekt/app/src/main/res/layout/main_actiity_layout.xml" value="0.16621376811594202" />
+        <entry key="..\:/Users/Daniel/Documents/android_workspace/zavrsni rad/AndroidProjekt/app/src/main/res/layout/place_cell.xml" value="0.16621376811594202" />
         <entry key="..\:/Users/Dominik/Desktop/FER/RESTTesting/app/src/main/res/drawable/baseline_public_24.xml" value="0.2595" />
         <entry key="..\:/Users/Dominik/Desktop/FER/RESTTesting/app/src/main/res/drawable/baseline_save_24.xml" value="0.2035" />
         <entry key="..\:/Users/Dominik/Desktop/FER/RESTTesting/app/src/main/res/drawable/rounded_corners.xml" value="0.2595" />
