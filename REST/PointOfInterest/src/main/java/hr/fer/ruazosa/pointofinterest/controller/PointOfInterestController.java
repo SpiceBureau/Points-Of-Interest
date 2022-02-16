@@ -101,7 +101,7 @@ public class PointOfInterestController {
         return new ResponseEntity<Object>(returnPlace, HttpStatus.OK);
     }
 
-    @DeleteMapping("/removePlace")
+    @PostMapping("/removePlace")
     public ResponseEntity<Object> removePlace(@RequestBody UserPlaceDTO userPlaceDTO) {
         User user = userPlaceDTO.getUser();
         Place place = userPlaceDTO.getPlace();

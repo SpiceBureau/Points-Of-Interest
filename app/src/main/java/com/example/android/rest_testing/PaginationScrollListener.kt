@@ -18,7 +18,7 @@ abstract class PaginationScrollListener(layout: LinearLayoutManager) : RecyclerV
         var firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
 
         if(!isLoading() && !isLastPage()){
-            if((visibleItemCount + firstVisiblePosition) >= totalItemCount && firstVisiblePosition >= 0 && totalItemCount >= PAGE_SIZE){
+            if((visibleItemCount + firstVisiblePosition) >= totalItemCount && firstVisiblePosition >= 0){
                 loadMoreItems()
             }
         }

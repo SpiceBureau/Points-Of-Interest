@@ -62,4 +62,15 @@ class RestRetrofit: RestInterface {
     override fun getSavedPlaces(userIndex: UserIndex): MutableList<PlaceResponse> {
         return placeService.getPlaces(userIndex)
     }
+
+    override fun deletePlace(userPlace: UserPlace): Boolean {
+        try {
+            placeService.deletePlace(userPlace)
+            return true
+        }
+        catch (ex: Exception){
+            Log.d("custom", ""+ex.toString())
+        }
+        return false
+    }
 }

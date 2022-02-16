@@ -14,4 +14,7 @@ interface PlaceService {
 
     @POST("/getPlaces")
     fun getPlaces(@Body userIndex: UserIndex): MutableList<PlaceResponse>
+
+    @POST("/removePlace")
+    fun deletePlace(@Body userPlace: UserPlace): PlaceResponse
 }

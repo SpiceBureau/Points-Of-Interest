@@ -12,4 +12,5 @@ interface RestInterface {
 
     fun savePlace(userPlace: UserPlace): Boolean
     fun getSavedPlaces(userIndex: UserIndex): MutableList<PlaceResponse>
+    fun deletePlace(userPlace: UserPlace): Boolean
 }

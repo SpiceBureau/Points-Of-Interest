@@ -27,18 +27,16 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
 
-    var fromIndex = 0
-    var toIndex = 10
+//    var fromIndex = 0
+//    var toIndex = 10
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_poiactivity)
 
-        fromIndex = PlacesRepository.listOfPlaces.size
-        toIndex = fromIndex + 10
-
         val user: UserShort = intent.getSerializableExtra("user") as UserShort
+        placesAdapter.user = user
         getMoreItems(user)
 
         savedPlacesRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -110,9 +108,9 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     private fun getMoreItems(user: UserShort) {
         var savedPlaces = CoroutineScope(Dispatchers.IO).async {
             val rest = RestFactory.instance
+            var fromIndex = PlacesRepository.listOfPlaces.size
+            var toIndex = fromIndex + 10
             val userIndex = UserIndex(user, fromIndex, toIndex)
-            fromIndex = toIndex
-            toIndex += 10
             rest.getSavedPlaces(userIndex)
         }
 
