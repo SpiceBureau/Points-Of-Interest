@@ -19,6 +19,18 @@
         android:theme="@style/Theme.RESTTesting"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".RegisterScene"
+            android:exported="false" />
+        <activity
+            android:name=".LoginScene"
+            android:exported="false" />
+        <activity
+            android:name=".LoginAndRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TempActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
 

@@ -6,7 +6,6 @@ import hr.fer.ruazosa.pointofinterest.DTO.UserPlaceDTO;
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.service.IPointOfInterestService;
 import hr.fer.ruazosa.pointofinterest.entity.User;
-import jdk.nashorn.internal.ir.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;

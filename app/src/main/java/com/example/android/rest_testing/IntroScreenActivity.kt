@@ -14,7 +14,7 @@ class IntroScreenActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val loginActivity = LoginActivity()
+            val loginActivity = LoginAndRegisterActivity()
             val intent = Intent(this, loginActivity::class.java)
             startActivity(intent)
             finish()
