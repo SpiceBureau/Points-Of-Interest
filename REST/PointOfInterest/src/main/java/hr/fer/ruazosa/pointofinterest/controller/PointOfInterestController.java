@@ -6,7 +6,7 @@ import hr.fer.ruazosa.pointofinterest.DTO.UserPlaceDTO;
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.service.IPointOfInterestService;
 import hr.fer.ruazosa.pointofinterest.entity.User;
-import jdk.nashorn.internal.ir.ObjectNode;
+//import jdk.nashorn.internal.ir.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -97,7 +97,7 @@ public class PointOfInterestController {
         if (returnPlace == null){
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("error", "place can not be added");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<Object>(body, HttpStatus.CONFLICT);
         }
 
         return new ResponseEntity<Object>(returnPlace, HttpStatus.OK);
@@ -105,6 +105,7 @@ public class PointOfInterestController {
 
     @DeleteMapping("/removePlace")
     public ResponseEntity<Object> removePlace(@RequestBody User user, @RequestParam String placeName) {
+
         ResponseEntity<Object> loginResponse = this.loginUser(user);
         if (loginResponse.getStatusCode() != HttpStatus.OK)
             return loginResponse;
@@ -128,6 +129,7 @@ public class PointOfInterestController {
     public ResponseEntity<Object> getPlacesByName(@RequestBody User user, @RequestParam(defaultValue = "") String name, @RequestParam(required = false) String type,
                                             @RequestParam Integer fromIndex, @RequestParam Integer toIndex) {
         ResponseEntity<Object> loginResponse = this.loginUser(user);
+
         if (loginResponse.getStatusCode() != HttpStatus.OK)
             return loginResponse;
 

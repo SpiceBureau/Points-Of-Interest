@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteX="5dp"
+    tools:layout_editor_absoluteY="0dp">
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/etEnterFirstName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/map" />
+
+    <EditText
+        android:id="@+id/etEnterFirstName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="First name"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/quantum_white_secondary_text"
+        app:layout_constraintBottom_toTopOf="@+id/etEnterLastName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
+
+    <EditText
+        android:id="@+id/etEnterLastName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Last name"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/quantum_white_secondary_text"
+        app:layout_constraintBottom_toTopOf="@+id/etEnterEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEnterFirstName" />
+
+    <EditText
+        android:id="@+id/etEnterEmail"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="email"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/quantum_white_secondary_text"
+        app:layout_constraintBottom_toTopOf="@+id/etEnterUsernameReg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEnterLastName" />
+
+    <EditText
+        android:id="@+id/etEnterUsernameReg"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="username"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/quantum_white_secondary_text"
+        app:layout_constraintBottom_toTopOf="@+id/etEnterPasswordReg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEnterEmail" />
+
+    <EditText
+        android:id="@+id/etEnterPasswordReg"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:textColorHint="@color/quantum_white_secondary_text"
+        app:layout_constraintBottom_toTopOf="@id/etReEnterPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etEnterUsernameReg" />
+
+    <EditText
+        android:id="@+id/etReEnterPassword"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="re-enter password"
+        android:inputType="textPassword"
+        android:textColorHint="@color/quantum_white_secondary_text"
+        app:layout_constraintBottom_toTopOf="@id/btnRegisterReg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etEnterPasswordReg" />
+
+    <Button
+        android:id="@+id/btnRegisterReg"
+        android:layout_width="185dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#3F51B5"
+        android:text="Register"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ibBackArrowReg"
+        app:layout_constraintTop_toBottomOf="@+id/etReEnterPassword" />
+
+    <ImageButton
+        android:id="@+id/ibBackArrowReg"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#3F51B5"
+        android:src="@drawable/outline_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnRegisterReg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etReEnterPassword" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

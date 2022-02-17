@@ -7,6 +7,7 @@ import hr.fer.ruazosa.pointofinterest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,7 +64,7 @@ public class PointOfInterestService implements IPointOfInterestService {
 
         if (toIndex < fromIndex || toIndex < 0 || fromIndex < 0) return null;
         if (toIndex > allPlaces.size()) toIndex = allPlaces.size();
-        if (fromIndex > allPlaces.size()) return null;
+        if (fromIndex > allPlaces.size()) return new ArrayList<>();
 
         return allPlaces.subList(fromIndex, toIndex);
     }

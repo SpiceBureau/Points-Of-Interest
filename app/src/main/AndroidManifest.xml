@@ -19,7 +19,13 @@
         android:theme="@style/Theme.RESTTesting"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".RegisterActivity"
+            android:name=".RegisterScene"
+            android:exported="false" />
+        <activity
+            android:name=".LoginScene"
+            android:exported="false" />
+        <activity
+            android:name=".LoginAndRegisterActivity"
             android:exported="false" />
 
         <meta-data
@@ -45,9 +51,6 @@
         <activity
             android:name=".SavedPOIActivity"
             android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />

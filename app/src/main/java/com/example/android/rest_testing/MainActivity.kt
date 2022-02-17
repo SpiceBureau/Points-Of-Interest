@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONObject
 import com.android.volley.Request
+import com.example.android.rest_testing.entity.UserShort
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -38,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_actiity_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+        val user = intent.extras?.getSerializable("user") as UserShort
 
         val btnSearch = findViewById<Button>(R.id.btnSearch)
         val btnGetLoc = findViewById<Button>(R.id.btnGetLoc)
@@ -133,6 +136,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.myPointOfInterest -> {
                     val savedPOIActivity = SavedPOIActivity()
                     val intent = Intent(this, savedPOIActivity::class.java)
+                    intent.putExtra("user", user)
                     startActivity(intent)
                     finish()
                 }
@@ -184,7 +188,7 @@ class MainActivity : AppCompatActivity() {
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
                         val placeInfo = PlaceInfo(response, applicationContext)
-                        val adapter = ItemAdapter(placeInfo.getListOfNames(), placeInfo.listOfCoordinates, tvLocation.text as String, this@MainActivity){ latlng ->
+                        val adapter = ItemAdapter(typeForSearch, user, placeInfo.getListOfNames(), placeInfo.listOfCoordinates, tvLocation.text as String, this@MainActivity){ latlng ->
                             val mapsActivity = MapsActivity2()
                             val intent = Intent(this@MainActivity, mapsActivity::class.java)
                             intent.putExtra("latitude", latlng.latitude)
