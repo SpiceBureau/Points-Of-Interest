@@ -13,4 +13,33 @@ interface UserService {
 
     @POST("/registerUser")
     fun registerUser(@Body user: User): UserResponse
+
+    /*
+        @get:GET("/courses")
+    val listOfCourses: List<ShortCourse>
+
+    @GET("/courses/{id}")
+    fun getCourse(@Path("id") id: Long?): Course
+
+    @GET("/courses/{id}/students")
+    fun getCourseStudents(@Path("id") courseId: Long?): List<ShortPerson>
+
+    @get:GET("/persons")
+    val listOfPersons: List<ShortPerson>
+
+    @GET("/persons/{id}")
+    fun getPerson(@Path("id") id: Long?): Person
+
+    @POST("/persons")
+    fun createPerson(@Body person: Person?) : String
+
+    @DELETE("/persons/{id}")
+    fun deletePerson(@Path("id") id: Long?): String
+
+    @POST("/courses/{courseId}/enrollPerson/{personId}")
+    fun enrollPersonToCourse(@Path("personId") personId: Long?, @Path("courseId") courseId: Long?, @Body o: Any): String
+
+    @POST("/courses/{courseId}/unenrollPerson/{personId}")
+    fun disenrollPersonFromCourse(@Path("personId") personId: Long?, @Path("courseId") courseId: Long?, @Body o: Any): String
+     */
 }

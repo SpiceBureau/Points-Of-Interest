@@ -19,7 +19,7 @@ public class PointOfInterestService implements IPointOfInterestService {
 
     @Override
     public Place addPlaceToUser(Place place, User user) {
-        if (place == null || user == null || getPlaceForUser(place, user) != null
+        if (place == null || user == null || getPlaceForUser(place.getName(), user) != null
                 || place.getName() == null || place.getType() == null
                 || place.getLocationLatitude() == null || place.getLocationLongitude() == null )
             return null;
@@ -28,7 +28,7 @@ public class PointOfInterestService implements IPointOfInterestService {
         user.addPlace(place);
         userRepository.save(user);
 
-        return getPlaceForUser(place, user);
+        return getPlaceForUser(place.getName(), user);
     }
 
     @Override
@@ -40,11 +40,11 @@ public class PointOfInterestService implements IPointOfInterestService {
     }
 
     @Override
-    public Place getPlaceForUser(Place place, User user) {
-        if (place == null || user == null)
+    public Place getPlaceForUser(String placeName, User user) {
+        if (placeName == null || user == null)
             return null;
 
-        List<Place> places = placeRepository.getUserPlace(user.getId(), place.getName());
+        List<Place> places = placeRepository.getUserPlace(user.getId(), placeName);
         if (places.size() != 1)
             return null;
 
@@ -52,9 +52,14 @@ public class PointOfInterestService implements IPointOfInterestService {
     }
 
     @Override
-    public List<Place> getPlacesFromTo(User user, Integer fromIndex, Integer toIndex) {
+    public List<Place> getPlacesFromTo(User user, String name, String type, Integer fromIndex, Integer toIndex) {
 
-        List<Place> allPlaces = placeRepository.findUserPlaces(user.getId());
+        String stringRegex = "%" + name + "%";
+
+        List<Place> allPlaces = type != null ?
+                placeRepository.findUserPlacesByType(user.getId(), stringRegex, type) :
+                placeRepository.findUserPlaces(user.getId(), stringRegex);
+
 
         if (toIndex < fromIndex || toIndex < 0 || fromIndex < 0) return null;
         if (toIndex > allPlaces.size()) toIndex = allPlaces.size();

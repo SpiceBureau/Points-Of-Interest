@@ -85,6 +85,8 @@ public class PointOfInterestController {
         }
     }
 
+
+
     @PostMapping("/addPlace")
     public ResponseEntity<Object> addPlace(@RequestBody UserPlaceDTO userPlaceDTO) {
         ResponseEntity<Object> loginResponse = this.loginUser(userPlaceDTO.getUser());
@@ -102,16 +104,13 @@ public class PointOfInterestController {
     }
 
     @DeleteMapping("/removePlace")
-    public ResponseEntity<Object> removePlace(@RequestBody UserPlaceDTO userPlaceDTO) {
-        User user = userPlaceDTO.getUser();
-        Place place = userPlaceDTO.getPlace();
-
+    public ResponseEntity<Object> removePlace(@RequestBody User user, @RequestParam String placeName) {
         ResponseEntity<Object> loginResponse = this.loginUser(user);
         if (loginResponse.getStatusCode() != HttpStatus.OK)
             return loginResponse;
 
         user = (User) loginResponse.getBody();
-        place = pointOfInterestService.getPlaceForUser(place, user);
+        Place place = pointOfInterestService.getPlaceForUser(placeName, user);
 
         if (place == null) {
             Map<String, Object> body = new LinkedHashMap<>();
@@ -125,14 +124,15 @@ public class PointOfInterestController {
     }
 
 
-    @GetMapping("/getPlaces")
-    public ResponseEntity<Object> getPlaces(@RequestBody UserFromIndexToIndexDTO userFromIndexToIndexDTO) {
-        ResponseEntity<Object> loginResponse = this.loginUser(userFromIndexToIndexDTO.getUser());
+    @PostMapping("/getPlaces")
+    public ResponseEntity<Object> getPlacesByName(@RequestBody User user, @RequestParam(defaultValue = "") String name, @RequestParam(required = false) String type,
+                                            @RequestParam Integer fromIndex, @RequestParam Integer toIndex) {
+        ResponseEntity<Object> loginResponse = this.loginUser(user);
         if (loginResponse.getStatusCode() != HttpStatus.OK)
             return loginResponse;
 
-        List<Place> resultPlaces = pointOfInterestService.getPlacesFromTo((User) loginResponse.getBody(),
-                userFromIndexToIndexDTO.getFromIndex(), userFromIndexToIndexDTO.getToIndex());
+        List<Place> resultPlaces = pointOfInterestService.getPlacesFromTo((User) loginResponse.getBody(), name, type, fromIndex, toIndex);
+
         if (resultPlaces == null){
             Map<String, Object> body = new LinkedHashMap<>();
             body.put("error", "can not get places for given data");

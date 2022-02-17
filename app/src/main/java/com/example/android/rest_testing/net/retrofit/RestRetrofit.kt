@@ -43,4 +43,55 @@ class RestRetrofit: RestInterface {
         }
         return false
     }
+
+    /*
+    override fun getListOfCourses(): List<ShortCourse>? {
+        return service.listOfCourses
+    }
+
+    override fun getCourse(id: Long?): Course? {
+        return service.getCourse(id)
+    }
+
+    override fun getCourseStudents(courseId: Long?): List<ShortPerson>? {
+        return service.getCourseStudents(courseId)
+    }
+
+    override fun getListOfPersons(): List<ShortPerson>? {
+        return service.listOfPersons
+    }
+
+    override fun getPerson(id: Long?): Person? {
+        return service.getPerson(id)
+    }
+
+    override fun createPerson(person: Person?) {
+        service.createPerson(person)
+    }
+
+    override fun deletePerson(id: Long?) {
+        for(course in service.listOfCourses){
+            disenrollPersonFromCourse(id, course.id)
+        }
+        service.deletePerson(id)
+    }
+
+    override fun enrollPersonToCourse(personId: Long?, courseId: Long?): Boolean {
+        if(getCourseStudents(courseId) == null || getPerson(personId) == null) return false
+        if((getCourseStudents(courseId)!!.stream().mapToLong{ t -> t.id!!}.toArray().contains(personId!!)).not()){
+            service.enrollPersonToCourse(personId, courseId, Object())
+            return true
+        }
+        return false
+    }
+
+    override fun disenrollPersonFromCourse(personId: Long?, courseId: Long?): Boolean {
+        if(getCourseStudents(courseId) == null || getPerson(personId) == null) return false
+        if(getCourseStudents(courseId)!!.stream().mapToLong{ t -> t.id!!}.toArray().contains(personId!!)){
+            service.disenrollPersonFromCourse(personId, courseId, Object())
+            return true
+        }
+        return false
+    }
+    */
 }
