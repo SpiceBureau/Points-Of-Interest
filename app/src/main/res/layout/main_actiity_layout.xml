@@ -15,13 +15,15 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
             android:background="@color/places_autocomplete_prediction_primary_text"
-            android:layout_width="409dp"
-            android:layout_height="465dp"
             android:windowSoftInputMode="adjustPan"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintTop_toBottomOf="@+id/btnSearch"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <Button
             android:id="@+id/btnSearch"
