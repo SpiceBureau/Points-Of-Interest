@@ -1,6 +1,7 @@
 package com.example.android.rest_testing.net.retrofit
 
 import android.util.Log
+import android.widget.Toast
 import com.example.android.rest_testing.entity.User
 import com.example.android.rest_testing.entity.UserIndex
 import com.example.android.rest_testing.entity.UserPlace
@@ -30,7 +31,7 @@ class RestRetrofit: RestInterface {
             return true
         }
         catch (ex: Exception) {
-            Log.d("custom", ""+ex.toString());
+            Log.d("custom", ""+ex.toString())
         }
         return false
     }

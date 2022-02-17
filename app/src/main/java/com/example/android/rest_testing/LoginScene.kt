@@ -45,10 +45,12 @@ class LoginScene : AppCompatActivity() {
                 toast.show()
             }
             else {
+
                 CoroutineScope(Dispatchers.IO).launch {
                     val user = UserShort(userName, password)
                     val rest = RestFactory.instance
                     val result = rest.loginUser(user)
+
                     withContext(Dispatchers.Main) {
                         if (result) {
                             val loadingActivity = LoadingActivity()
