@@ -21,6 +21,9 @@ class PlacesViewHolder(v:View, adapter: PlacesAdapter): RecyclerView.ViewHolder(
     var deleteNoteButton: ImageButton? = null
     var MapButton: ImageButton? = null
 
+    var latitude: Double? = null
+    var longitude: Double? = null
+
     init {
         placeNameTextView = v.findViewById(R.id.tvItemTitle)
         placeTypeTextView = v.findViewById(R.id.tvLocationType)
@@ -38,6 +41,14 @@ class PlacesViewHolder(v:View, adapter: PlacesAdapter): RecyclerView.ViewHolder(
                     rest.deletePlace(UserPlace(placeAdapter.user!!, place))
                 }
             }
+        }
+
+        MapButton?.setOnClickListener {
+            val mapsActivity = MapsActivity2()
+            val intent = Intent(v.context, mapsActivity::class.java)
+            intent.putExtra("latitude", latitude)
+            intent.putExtra("longitude", longitude)
+            startActivity(v.context, intent, null)
         }
     }
 }

@@ -18,6 +18,8 @@ class PlacesAdapter: RecyclerView.Adapter<PlacesViewHolder>() {
     override fun onBindViewHolder(holder: PlacesViewHolder, position: Int) {
         holder.placeNameTextView?.text = PlacesRepository.listOfPlaces[position].name //dodati .toString() ako ne bude radilo
         holder.placeTypeTextView?.text = PlacesRepository.listOfPlaces[position].type
+        holder.latitude = PlacesRepository.listOfPlaces[position].locationLatitude
+        holder.longitude = PlacesRepository.listOfPlaces[position].locationLongitude
     }
 
     override fun getItemCount(): Int {
