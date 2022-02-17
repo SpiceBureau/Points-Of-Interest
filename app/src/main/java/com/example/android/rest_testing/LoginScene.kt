@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.*
 import com.example.android.rest_testing.entity.UserShort
 import com.example.android.rest_testing.net.RestFactory
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +15,8 @@ class LoginScene : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_scene)
+
+        supportActionBar?.hide()
 
         val btnLoginLog = findViewById<Button>(R.id.btnLoginLog)
         val btnBackArrowLog = findViewById<ImageButton>(R.id.ibBackArrowLog)
@@ -32,6 +33,8 @@ class LoginScene : AppCompatActivity() {
             val loginAndRegisterActivity = LoginAndRegisterActivity()
             val intent = Intent(this, loginAndRegisterActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+            finish()
         }
 
         btnLoginLog.setOnClickListener {
@@ -51,6 +54,7 @@ class LoginScene : AppCompatActivity() {
                             val loadingActivity = LoadingActivity()
                             val intent = Intent(this@LoginScene, loadingActivity::class.java)
                             startActivity(intent)
+                            finish()
                         } else {
                             val toast = Toast.makeText(
                                 this@LoginScene,

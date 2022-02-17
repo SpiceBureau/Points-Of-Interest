@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android.rest_testing.entity.User
 import com.example.android.rest_testing.net.RestFactory
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +18,8 @@ class RegisterScene : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_scene)
+
+        supportActionBar?.hide()
 
         val etEnterFirstName = findViewById<EditText>(R.id.etEnterFirstName)
         val etEnterLastName = findViewById<EditText>(R.id.etEnterLastName)
@@ -33,6 +34,8 @@ class RegisterScene : AppCompatActivity() {
             val loginAndRegisterActivity = LoginAndRegisterActivity()
             val intent = Intent(this, loginAndRegisterActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+            finish()
         }
 
         btnRegisterReg.setOnClickListener {
