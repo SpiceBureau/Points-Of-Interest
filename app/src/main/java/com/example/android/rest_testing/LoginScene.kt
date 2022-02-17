@@ -55,8 +55,8 @@ class LoginScene : AppCompatActivity() {
                         if (result) {
                             val loadingActivity = LoadingActivity()
                             val intent = Intent(this@LoginScene, loadingActivity::class.java)
-                            startActivity(intent)
                             intent.putExtra("user", user)
+                            startActivity(intent)
                             finish()
                         } else {
                             val toast = Toast.makeText(

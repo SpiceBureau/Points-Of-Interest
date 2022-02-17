@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
-        val user:UserShort = intent.getSerializableExtra("user") as UserShort
+        val user = intent.extras?.getSerializable("user") as UserShort
 
         val btnSearch = findViewById<Button>(R.id.btnSearch)
         val btnGetLoc = findViewById<Button>(R.id.btnGetLoc)
