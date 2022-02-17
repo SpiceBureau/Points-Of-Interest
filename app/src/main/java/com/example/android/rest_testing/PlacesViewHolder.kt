@@ -1,8 +1,10 @@
 package com.example.android.rest_testing
 
+import android.content.Intent
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.rest_testing.entity.Place
 import com.example.android.rest_testing.entity.UserPlace
@@ -17,11 +19,13 @@ class PlacesViewHolder(v:View, adapter: PlacesAdapter): RecyclerView.ViewHolder(
     var placeNameTextView: TextView? = null
     var placeTypeTextView: TextView? = null
     var deleteNoteButton: ImageButton? = null
+    var MapButton: ImageButton? = null
 
     init {
-        placeNameTextView = v.findViewById(R.id.placeNameTextView)
-        placeTypeTextView = v.findViewById(R.id.placeTypeTextView)
-        deleteNoteButton = v.findViewById(R.id.deletePlaceButton)
+        placeNameTextView = v.findViewById(R.id.tvItemTitle)
+        placeTypeTextView = v.findViewById(R.id.tvLocationType)
+        deleteNoteButton = v.findViewById(R.id.btnDelete)
+        MapButton = v.findViewById(R.id.btnMap)
 
         deleteNoteButton?.setOnClickListener {
             var position = adapterPosition
