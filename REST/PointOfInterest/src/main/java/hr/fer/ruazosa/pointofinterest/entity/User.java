@@ -25,6 +25,9 @@ public class User {
     @Column(name = "e_mail")
     private String email;
 
+    @Column(name = "enabled")
+    private boolean enabled = false;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Place> places = new ArrayList<>();
 
@@ -42,6 +45,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setUsername(String username) {
@@ -73,18 +80,21 @@ public class User {
         return email;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
     public User() {
 
     }

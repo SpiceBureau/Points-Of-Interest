@@ -2,8 +2,10 @@ package hr.fer.ruazosa.pointofinterest.service;
 
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.entity.User;
+import hr.fer.ruazosa.pointofinterest.entity.VerificationToken;
 import hr.fer.ruazosa.pointofinterest.repository.PlaceRepository;
 import hr.fer.ruazosa.pointofinterest.repository.UserRepository;
+import hr.fer.ruazosa.pointofinterest.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +21,8 @@ public class PointOfInterestService implements IPointOfInterestService {
     private UserRepository userRepository;
     @Autowired
     private PlaceRepository placeRepository;
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
 
     @Override
     public Place addPlaceToUser(Place place, User user) {
@@ -80,9 +84,9 @@ public class PointOfInterestService implements IPointOfInterestService {
 
     public User getUser(String username) {
         List<User> loggedUserList = userRepository.findByUserName(username);
-        if (loggedUserList.isEmpty()) {
+        if (loggedUserList.isEmpty())
             return null;
-        }
+
         return loggedUserList.get(0);
     }
 
@@ -111,8 +115,22 @@ public class PointOfInterestService implements IPointOfInterestService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUser(username);
-        org.springframework.security.core.userdetails.User userDetails =
-                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
-        return userDetails;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
+    }
+
+    @Override
+    public void saveRegisteredUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(token, user);
+        tokenRepository.save(myToken);
     }
 }

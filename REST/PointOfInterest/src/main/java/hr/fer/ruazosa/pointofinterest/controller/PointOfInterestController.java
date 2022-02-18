@@ -2,6 +2,7 @@ package hr.fer.ruazosa.pointofinterest.controller;
 
 import hr.fer.ruazosa.pointofinterest.JWT.JwtResponse;
 import hr.fer.ruazosa.pointofinterest.JWT.JwtUtils;
+import hr.fer.ruazosa.pointofinterest.mailImplementation.OnRegistrationCompleteEvent;
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.service.IPointOfInterestService;
 import hr.fer.ruazosa.pointofinterest.entity.User;
@@ -43,6 +44,9 @@ public class PointOfInterestController {
     @Autowired
     private IPointOfInterestService pointOfInterestService;
 
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
     @PostMapping("/registerUser")
     public ResponseEntity<Object> registerUser(@RequestBody User user, HttpServletRequest request) {
         // validation
@@ -66,9 +70,14 @@ public class PointOfInterestController {
 
         String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(password));
+        user.setEnabled(false);
         user = pointOfInterestService.registerUser(user);
 
-        return createAuthenticationToken(new User(user.getUsername(), password));
+        String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,
+                request.getLocale(), appUrl));
+
+        return ResponseEntity.ok(user.getEmail());
     }
 
     @PostMapping("/loginUser")
@@ -79,6 +88,10 @@ public class PointOfInterestController {
         } catch (Exception e) {
             return returnError("authentication failed");
         }
+
+        user = pointOfInterestService.getUser(user.getUsername());
+        if(!user.isEnabled())
+            return returnError("user not activated");
 
         UserDetails userDetails = pointOfInterestService.loadUserByUsername(user.getUsername());
         final String token = jwtUtils.generateToken(userDetails);
