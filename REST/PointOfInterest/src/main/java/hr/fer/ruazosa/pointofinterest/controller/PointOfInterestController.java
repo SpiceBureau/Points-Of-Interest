@@ -1,19 +1,24 @@
 package hr.fer.ruazosa.pointofinterest.controller;
 
-
-import hr.fer.ruazosa.pointofinterest.DTO.UserFromIndexToIndexDTO;
-import hr.fer.ruazosa.pointofinterest.DTO.UserPlaceDTO;
+import hr.fer.ruazosa.pointofinterest.JWT.JwtResponse;
+import hr.fer.ruazosa.pointofinterest.JWT.JwtUtils;
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.service.IPointOfInterestService;
 import hr.fer.ruazosa.pointofinterest.entity.User;
-//import jdk.nashorn.internal.ir.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.PostRemove;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -27,136 +32,133 @@ import java.util.Set;
 public class PointOfInterestController {
 
     @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private IPointOfInterestService pointOfInterestService;
 
     @PostMapping("/registerUser")
-    public ResponseEntity<Object> registerUser(@RequestBody User user) {
+    public ResponseEntity<Object> registerUser(@RequestBody User user, HttpServletRequest request) {
         // validation
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        for (ConstraintViolation<User> violation : violations) {
+        for (ConstraintViolation<User> violation : violations)
             body.put(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-        if (!body.isEmpty()) {
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
+        if (!body.isEmpty())
+            return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
 
-        if (!pointOfInterestService.checkUsernameUnique(user)) {
-            Map<String, Object> bodyError = new LinkedHashMap<>();
-            bodyError.put("error", "user with same username already exists");
-            return new ResponseEntity<Object>(bodyError, HttpStatus.NOT_ACCEPTABLE);
-        }
-        if (!pointOfInterestService.checkEmailUnique(user)) {
-            Map<String, Object> bodyError = new LinkedHashMap<>();
-            bodyError.put("error", "user with same email already exists");
-            return new ResponseEntity<Object>(bodyError, HttpStatus.NOT_ACCEPTABLE);
-        }
+        if (!pointOfInterestService.checkUsernameUnique(user))
+            return returnError("user with same username already exists");
+        if (!pointOfInterestService.checkEmailUnique(user))
+            return returnError("user with same email already exists");
 
-        pointOfInterestService.registerUser(user);
-        return new ResponseEntity<Object>(user, HttpStatus.OK);
+        if (user.getPassword().length() > 60)
+            return returnError("password can not be longer than 60 characters");
+
+        String password = user.getPassword();
+        user.setPassword(passwordEncoder.encode(password));
+        user = pointOfInterestService.registerUser(user);
+
+        return createAuthenticationToken(new User(user.getUsername(), password));
     }
 
     @PostMapping("/loginUser")
-    public ResponseEntity<Object> loginUser(@RequestBody User user) {
-        // validation
-        if (user == null) {
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "no user JSON object in body");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+    public ResponseEntity<Object> createAuthenticationToken(@RequestBody User user) {
+
+        try {
+            authenticate(user.getUsername(), user.getPassword());
+        } catch (Exception e) {
+            return returnError("authentication failed");
         }
-        else if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "username or password parameters are empty");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
-        else {
-            User loggedUser = pointOfInterestService.loginUser(user);
-            if (loggedUser != null) {
-                return new ResponseEntity<Object>(loggedUser, HttpStatus.OK);
-            }
-            else {
-                Map<String, Object> body = new LinkedHashMap<>();
-                body.put("error", "no user found");
-                return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
-            }
+
+        UserDetails userDetails = pointOfInterestService.loadUserByUsername(user.getUsername());
+        final String token = jwtUtils.generateToken(userDetails);
+
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    private void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 
-
-
     @PostMapping("/addPlace")
-    public ResponseEntity<Object> addPlace(@RequestBody UserPlaceDTO userPlaceDTO) {
-        ResponseEntity<Object> loginResponse = this.loginUser(userPlaceDTO.getUser());
-        if (loginResponse.getStatusCode() != HttpStatus.OK)
-            return loginResponse;
+    public ResponseEntity<Object> addPlace(@RequestBody Place place) {
 
-        Place returnPlace = pointOfInterestService.addPlaceToUser(userPlaceDTO.getPlace(), (User) loginResponse.getBody());
-        if (returnPlace == null){
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "place can not be added");
-            return new ResponseEntity<Object>(body, HttpStatus.CONFLICT);
-        }
+        User user = getCurrentUser();
 
-        return new ResponseEntity<Object>(returnPlace, HttpStatus.OK);
+        Place returnPlace = pointOfInterestService.addPlaceToUser(place, user);
+        if (returnPlace == null)
+            return returnError("place can not be added");
+
+        return new ResponseEntity<>(returnPlace, HttpStatus.OK);
     }
 
     @DeleteMapping("/removePlace")
-    public ResponseEntity<Object> removePlace(@RequestBody User user, @RequestParam String placeName) {
+    public ResponseEntity<Object> removePlace(@RequestParam String placeName) {
 
-        ResponseEntity<Object> loginResponse = this.loginUser(user);
-        if (loginResponse.getStatusCode() != HttpStatus.OK)
-            return loginResponse;
+        User user = getCurrentUser();
 
-        user = (User) loginResponse.getBody();
         Place place = pointOfInterestService.getPlaceForUser(placeName, user);
-
-        if (place == null) {
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "place can not be reached");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
+        if (place == null)
+            return returnError("place can not be reached");
 
         pointOfInterestService.deletePlace(place);
 
-        return new ResponseEntity<Object>(place, HttpStatus.OK);
+        return new ResponseEntity<>(place, HttpStatus.OK);
     }
 
+    @GetMapping("/getPlaces")
+    public ResponseEntity<Object> getPlacesByName(@RequestParam(defaultValue = "") String name,
+                                                  @RequestParam(required = false) String type,
+                                                  @RequestParam Integer fromIndex,
+                                                  @RequestParam Integer toIndex) {
 
-    @PostMapping("/getPlaces")
-    public ResponseEntity<Object> getPlacesByName(@RequestBody User user, @RequestParam(defaultValue = "") String name, @RequestParam(required = false) String type,
-                                            @RequestParam Integer fromIndex, @RequestParam Integer toIndex) {
-        ResponseEntity<Object> loginResponse = this.loginUser(user);
+        User user = getCurrentUser();
 
-        if (loginResponse.getStatusCode() != HttpStatus.OK)
-            return loginResponse;
+        List<Place> resultPlaces = pointOfInterestService.getPlacesFromTo(user, name, type, fromIndex, toIndex);
+        if (resultPlaces == null)
+            return returnError("can not get places for given data");
 
-        List<Place> resultPlaces = pointOfInterestService.getPlacesFromTo((User) loginResponse.getBody(), name, type, fromIndex, toIndex);
-
-        if (resultPlaces == null){
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "can not get places for given data");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        return new ResponseEntity<Object>(resultPlaces, HttpStatus.OK);
+        return new ResponseEntity<>(resultPlaces, HttpStatus.OK);
     }
 
     @GetMapping("/countPlaces")
-    public ResponseEntity<Object> countPlaces(@RequestBody User user) {
-        ResponseEntity<Object> loginResponse = this.loginUser(user);
-        if (loginResponse.getStatusCode() != HttpStatus.OK)
-            return loginResponse;
+    public ResponseEntity<Object> countPlaces() {
 
-        Long resultCountPlaces = pointOfInterestService.countPlaces((User) loginResponse.getBody());
-        if (resultCountPlaces == null){
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "can not count places for this user");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
+        User user = getCurrentUser();
 
-        return new ResponseEntity<Object>(resultCountPlaces, HttpStatus.OK);
+        Long resultCountPlaces = pointOfInterestService.countPlaces(user);
+        if (resultCountPlaces == null)
+            return returnError("can not count places for this user");
+
+        return new ResponseEntity<>(resultCountPlaces, HttpStatus.OK);
+    }
+
+
+
+    private ResponseEntity<Object> returnError(String message) {
+        Map<String, Object> bodyError = new LinkedHashMap<>();
+        bodyError.put("error", message);
+        return new ResponseEntity<>(bodyError, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    private User getCurrentUser(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return pointOfInterestService.getUser(userDetails.getUsername());
     }
 }

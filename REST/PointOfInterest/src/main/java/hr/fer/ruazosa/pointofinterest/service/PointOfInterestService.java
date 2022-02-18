@@ -5,6 +5,8 @@ import hr.fer.ruazosa.pointofinterest.entity.User;
 import hr.fer.ruazosa.pointofinterest.repository.PlaceRepository;
 import hr.fer.ruazosa.pointofinterest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,11 +73,18 @@ public class PointOfInterestService implements IPointOfInterestService {
 
     @Override
     public Long countPlaces(User user) {
-        if (loginUser(user) == null)
+        if (user == null)
             return null;
         return placeRepository.countUserPlaces(user.getId());
     }
 
+    public User getUser(String username) {
+        List<User> loggedUserList = userRepository.findByUserName(username);
+        if (loggedUserList.isEmpty()) {
+            return null;
+        }
+        return loggedUserList.get(0);
+    }
 
     @Override
     public User registerUser(User user) {
@@ -100,11 +109,10 @@ public class PointOfInterestService implements IPointOfInterestService {
     }
 
     @Override
-    public User loginUser(User user) {
-        List<User> loggedUserList = userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword());
-        if (loggedUserList.isEmpty()) {
-            return null;
-        }
-        return userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword()).get(0);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = getUser(username);
+        org.springframework.security.core.userdetails.User userDetails =
+                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        return userDetails;
     }
 }

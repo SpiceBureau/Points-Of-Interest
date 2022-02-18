@@ -2,10 +2,12 @@ package hr.fer.ruazosa.pointofinterest.service;
 
 import hr.fer.ruazosa.pointofinterest.entity.Place;
 import hr.fer.ruazosa.pointofinterest.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface IPointOfInterestService {
+public interface IPointOfInterestService extends UserDetailsService{
     Place addPlaceToUser(Place place, User user);
     void deletePlace(Place place);
     Place getPlaceForUser(String placeName, User user);
@@ -13,7 +15,9 @@ public interface IPointOfInterestService {
     Long countPlaces(User user);
 
     User registerUser(User user);
+    User getUser(String username);
     boolean checkUsernameUnique(User user);
     boolean checkEmailUnique(User user);
-    User loginUser(User user);
+
+    UserDetails loadUserByUsername(String username);
 }
