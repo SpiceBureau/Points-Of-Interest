@@ -38,7 +38,6 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
 
         val token: JWT = intent.getSerializableExtra("token") as JWT
         placesAdapter.token = token
-        getMoreItems(token)
 
         savedPlacesRecyclerView.layoutManager = LinearLayoutManager(this)
         savedPlacesRecyclerView.adapter = placesAdapter
@@ -104,6 +103,11 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+    if(PlacesRepository.listOfPlaces.size == 0) {
+        getMoreItems(token)
+    }
+
     }
 
     private fun getMoreItems(token: JWT) {

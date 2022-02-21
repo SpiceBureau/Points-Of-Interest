@@ -15,4 +15,9 @@ class PlaceResponse(
     override fun toString(): String {
         return name + " " + type + " " + locationLatitude + " " + locationLongitude
     }
+
+    override fun equals(other: Any?): Boolean {
+        var other = other as PlaceResponse
+        return id == other.id
+    }
 }

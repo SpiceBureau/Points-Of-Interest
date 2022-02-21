@@ -83,7 +83,7 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
                 val result = rest.savePlace(userPlace)
                 withContext(Dispatchers.Main) {
                     if (result) {
-                        val toast = Toast.makeText(context, "Location saved.", Toast.LENGTH_LONG)
+                        val toast = Toast.makeText(context, "Location saved.", Toast.LENGTH_SHORT)
                         toast.show()
                     }
                     else{

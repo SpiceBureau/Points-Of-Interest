@@ -9,7 +9,7 @@ class UserIndex(jwtToken: JWT, startIndex: Int, endIndex: Int):Serializable{
     val toIndex = endIndex
 
     override fun toString(): String {
-        return token.toString() + " " + fromIndex + " " + toIndex
+        return fromIndex.toString() + " " + toIndex.toString()
     }
 
     fun getToken(): String{
