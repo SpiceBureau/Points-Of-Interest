@@ -12,7 +12,7 @@ interface UserService {
     fun loginUser(@Body user: UserShort): JWT
 
     @POST("/registerUser")
-    fun registerUser(@Body user: User): UserResponse
+    fun registerUser(@Body user: User): String
 
     /*
         @get:GET("/courses")

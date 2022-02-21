@@ -70,12 +70,12 @@ class RegisterScene : AppCompatActivity() {
                     withContext(Dispatchers.Main){
                         if(result){
                             val extras = Bundle()
-                            extras.putString("username", username)
+                            extras.putString("username", "null")
                             val loginActivity = LoginScene()
                             val intent = Intent(this@RegisterScene, loginActivity::class.java)
                             intent.putExtras(extras)
                             startActivity(intent)
-                            Toast.makeText(this@RegisterScene, "Registration successful! You can login now.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@RegisterScene, "Registration successful! Check email for validation.", Toast.LENGTH_SHORT).show()
                             finish()
                         }
                         else{
