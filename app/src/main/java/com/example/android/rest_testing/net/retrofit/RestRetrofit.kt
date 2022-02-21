@@ -51,7 +51,7 @@ class RestRetrofit: RestInterface {
     override fun savePlace(userPlace: UserPlace): Boolean {
         try {
             var savedLocation = placeService.savePlace(userPlace.getToken(), userPlace.getPlace())
-            println(savedLocation)
+//            println(savedLocation)
             return true
         }
         catch (ex: Exception){
@@ -61,12 +61,12 @@ class RestRetrofit: RestInterface {
     }
 
     override fun getSavedPlaces(userIndex: UserIndex): MutableList<PlaceResponse> {
-        return placeService.getPlaces(userIndex.getToken(), userIndex.fromIndex.toString(), userIndex.toIndex.toString())
+        return placeService.getPlaces(userIndex.getToken(), userIndex.fromIndex, userIndex.toIndex)
     }
 
     override fun deletePlace(userPlace: UserPlace): Boolean {
         try {
-            placeService.deletePlace(userPlace)
+            placeService.deletePlace(userPlace.getToken(), userPlace.getPlaceName())
             return true
         }
         catch (ex: Exception){

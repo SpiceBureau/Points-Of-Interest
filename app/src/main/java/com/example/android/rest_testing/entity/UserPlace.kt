@@ -18,4 +18,8 @@ class UserPlace(jwtToken: JWT, savingPlace: Place):Serializable {
     public fun getPlace(): Place{
         return place
     }
+
+    public fun getPlaceName(): String{
+        return place.name
+    }
 }

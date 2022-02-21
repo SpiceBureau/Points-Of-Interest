@@ -38,7 +38,7 @@ class PlacesViewHolder(v:View, adapter: PlacesAdapter): RecyclerView.ViewHolder(
                 val rest = RestFactory.instance
                 val place = Place(name = placeNameTextView?.text.toString())
                 if(placeAdapter.token != null) {
-//                    rest.deletePlace(UserPlace(placeAdapter.token!!, place)) brisanje trenutno ne radi
+                    rest.deletePlace(UserPlace(placeAdapter.token!!, place))
                 }
             }
         }
