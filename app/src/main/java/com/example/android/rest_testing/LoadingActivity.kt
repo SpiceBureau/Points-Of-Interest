@@ -13,14 +13,14 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
 
-        val user = intent.getSerializableExtra("user")
+        val token = intent.getSerializableExtra("token")
 
         supportActionBar?.hide()
 
         Handler(Looper.getMainLooper()).postDelayed({
             val mainActivity = MainActivity()
             val intent = Intent(this, mainActivity::class.java)
-            intent.putExtra("user", user)
+            intent.putExtra("token", token)
             startActivity(intent)
             finish()
         }, 10)

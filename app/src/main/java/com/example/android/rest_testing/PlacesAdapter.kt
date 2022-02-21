@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.rest_testing.entity.UserShort
+import com.example.android.rest_testing.net.retrofit.JWT
 
 class PlacesAdapter: RecyclerView.Adapter<PlacesViewHolder>() {
-    var user: UserShort? = null
+    var token: JWT? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacesViewHolder {
         val context = parent.context

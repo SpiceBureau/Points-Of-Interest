@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.android.rest_testing.entity.UserIndex
 import com.example.android.rest_testing.entity.UserShort
 import com.example.android.rest_testing.net.RestFactory
+import com.example.android.rest_testing.net.retrofit.JWT
 import com.example.android.rest_testing.net.retrofit.PlaceResponse
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_saved_poiactivity.*
@@ -35,9 +36,9 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_poiactivity)
 
-        val user: UserShort = intent.getSerializableExtra("user") as UserShort
-        placesAdapter.user = user
-        getMoreItems(user)
+        val token: JWT = intent.getSerializableExtra("token") as JWT
+        placesAdapter.token = token
+        getMoreItems(token)
 
         savedPlacesRecyclerView.layoutManager = LinearLayoutManager(this)
         savedPlacesRecyclerView.adapter = placesAdapter
@@ -45,7 +46,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         savedPlacesRecyclerView.addOnScrollListener(object: PaginationScrollListener(savedPlacesRecyclerView.layoutManager as LinearLayoutManager){
             override fun loadMoreItems() {
                 isLoading = true
-                getMoreItems(user)
+                getMoreItems(token)
                 isLoading = false
             }
 
@@ -90,7 +91,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
                     val bundle = Bundle()
                     bundle.putString("key1", "SavedPOIActivity")
                     intent.putExtras(bundle)
-                    intent.putExtra("user", user)
+                    intent.putExtra("token", token)
                     startActivity(intent)
                     finish()
                 }
@@ -105,12 +106,13 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    private fun getMoreItems(user: UserShort) {
+    private fun getMoreItems(token: JWT) {
         var savedPlaces = CoroutineScope(Dispatchers.IO).async {
             val rest = RestFactory.instance
             var fromIndex = PlacesRepository.listOfPlaces.size
             var toIndex = fromIndex + 10
-            val userIndex = UserIndex(user, fromIndex, toIndex)
+            val userIndex = UserIndex(token, fromIndex, toIndex)
+            println(userIndex)
             rest.getSavedPlaces(userIndex)
         }
 

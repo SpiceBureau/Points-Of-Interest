@@ -25,15 +25,15 @@ class RestRetrofit: RestInterface {
         placeService = retrofit.create(PlaceService::class.java)
     }
 
-    override fun loginUser(user: UserShort): Boolean {
+    override fun loginUser(user: UserShort): JWT? {
         try {
-            var loggedUser = userService.loginUser(user)
-            return true
+            val jwt = userService.loginUser(user)
+            return jwt
         }
         catch (ex: Exception) {
             Log.d("custom", ""+ex.toString())
         }
-        return false
+        return null
     }
 
     override fun registerUser(user: User): Boolean {
@@ -50,7 +50,7 @@ class RestRetrofit: RestInterface {
 
     override fun savePlace(userPlace: UserPlace): Boolean {
         try {
-            var savedLocation = placeService.savePlace(userPlace)
+            var savedLocation = placeService.savePlace(userPlace.getToken(), userPlace.getPlace())
             println(savedLocation)
             return true
         }
@@ -61,7 +61,7 @@ class RestRetrofit: RestInterface {
     }
 
     override fun getSavedPlaces(userIndex: UserIndex): MutableList<PlaceResponse> {
-        return placeService.getPlaces(userIndex)
+        return placeService.getPlaces(userIndex.getToken(), userIndex.fromIndex.toString(), userIndex.toIndex.toString())
     }
 
     override fun deletePlace(userPlace: UserPlace): Boolean {

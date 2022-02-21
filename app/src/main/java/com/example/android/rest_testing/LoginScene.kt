@@ -49,13 +49,13 @@ class LoginScene : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val user = UserShort(userName, password)
                     val rest = RestFactory.instance
-                    val result = rest.loginUser(user)
+                    val token = rest.loginUser(user)
 
                     withContext(Dispatchers.Main) {
-                        if (result) {
+                        if (token != null) {
                             val loadingActivity = LoadingActivity()
                             val intent = Intent(this@LoginScene, loadingActivity::class.java)
-                            intent.putExtra("user", user)
+                            intent.putExtra("token", token)
                             startActivity(intent)
                             finish()
                         } else {

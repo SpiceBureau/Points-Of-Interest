@@ -9,7 +9,7 @@ import retrofit.http.POST
 
 interface UserService {
     @POST("/loginUser")
-    fun loginUser(@Body user: UserShort): UserResponse
+    fun loginUser(@Body user: UserShort): JWT
 
     @POST("/registerUser")
     fun registerUser(@Body user: User): UserResponse

@@ -3,18 +3,15 @@ package com.example.android.rest_testing.net.retrofit
 import com.example.android.rest_testing.entity.Place
 import com.example.android.rest_testing.entity.UserIndex
 import com.example.android.rest_testing.entity.UserPlace
-import retrofit.http.Body
-import retrofit.http.GET
-import retrofit.http.Headers
-import retrofit.http.POST
+import retrofit.http.*
 
 interface PlaceService {
     @POST("/addPlace")
-    fun savePlace(@Body userPlace: UserPlace): PlaceResponse
+    fun savePlace(@Header("Authorization") token:String,  @Body place: Place): PlaceResponse
 
-    @POST("/getPlaces")
-    fun getPlaces(@Body userIndex: UserIndex): MutableList<PlaceResponse>
+    @GET("/getPlaces")
+    fun getPlaces(@Header("Authorization") token:String, @Query("fromIndex") fromIndex:String, @Query("toIndex") toIndex:String): MutableList<PlaceResponse>
 
-    @POST("/removePlace")
+    @DELETE("/removePlace")
     fun deletePlace(@Body userPlace: UserPlace): PlaceResponse
 }

@@ -17,6 +17,7 @@ import com.example.android.rest_testing.entity.Place
 import com.example.android.rest_testing.entity.UserPlace
 import com.example.android.rest_testing.entity.UserShort
 import com.example.android.rest_testing.net.RestFactory
+import com.example.android.rest_testing.net.retrofit.JWT
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,10 +26,10 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class ItemAdapter(type:String, userShort: UserShort, iL: List<String>, locL: List<Any>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     private val locationType = type
-    private val user = userShort
+    private val token = jwtToken
     private val itemList = iL
     private val listOfCoordinates = locL
     private val context = cnt
@@ -78,7 +79,7 @@ class ItemAdapter(type:String, userShort: UserShort, iL: List<String>, locL: Lis
             CoroutineScope(Dispatchers.IO).launch {
                 val rest = RestFactory.instance
                 val place = Place(holder.itemTitle.text as String, locationType, itemLocation.latitude, itemLocation.longitude)
-                val userPlace = UserPlace(user, place)
+                val userPlace = UserPlace(token, place)
                 val result = rest.savePlace(userPlace)
                 withContext(Dispatchers.Main) {
                     if (result) {
