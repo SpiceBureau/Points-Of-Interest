@@ -1,8 +1,10 @@
 package com.example.android.rest_testing
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.location.Location
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
@@ -80,15 +83,27 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
                 val rest = RestFactory.instance
                 val place = Place(holder.itemTitle.text as String, locationType, itemLocation.latitude, itemLocation.longitude)
                 val userPlace = UserPlace(token, place)
-                val result = rest.savePlace(userPlace)
+                val result = rest.savePlace(userPlace, context)
                 withContext(Dispatchers.Main) {
-                    if (result) {
+                    if (result.passed) {
+                        PlacesRepository.listOfPlaces.clear()
                         val toast = Toast.makeText(context, "Location saved.", Toast.LENGTH_SHORT)
                         toast.show()
                     }
                     else{
-                        val toast = Toast.makeText(context, "Location already saved.", Toast.LENGTH_LONG)
-                        toast.show()
+                        if(result.status == 401) {
+                            val toast = Toast.makeText(context,"Authentification failed. Login again.",Toast.LENGTH_SHORT)
+                            toast.show()
+                            val extras = Bundle()
+                            extras.putString("username", "null")
+                            val intent = Intent(context, LoginScene::class.java)
+                            intent.putExtras(extras)
+                            startActivity(context, intent, Bundle())
+                        }
+                        else if(result.status == 406){
+                            val toast = Toast.makeText(context,"Location already saved.",Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
                     }
                 }
             }

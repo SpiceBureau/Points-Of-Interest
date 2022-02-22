@@ -1,7 +1,12 @@
 package com.example.android.rest_testing.net.retrofit
 
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import com.example.android.rest_testing.LoginScene
 import com.example.android.rest_testing.entity.User
 import com.example.android.rest_testing.entity.UserIndex
 import com.example.android.rest_testing.entity.UserPlace
@@ -10,6 +15,7 @@ import com.example.android.rest_testing.net.RestFactory
 import com.example.android.rest_testing.net.RestInterface
 import retrofit.ResponseCallback
 import retrofit.RestAdapter
+import retrofit.RetrofitError
 
 class RestRetrofit: RestInterface {
     private val userService: UserService
@@ -48,20 +54,18 @@ class RestRetrofit: RestInterface {
         return false
     }
 
-    override fun savePlace(userPlace: UserPlace): Boolean {
+    override fun savePlace(userPlace: UserPlace, context: Context): SimpleResponse {
+        var statusCode:Int
         try {
             var savedLocation = placeService.savePlace(userPlace.getToken(), userPlace.getPlace())
-//            println(savedLocation)
-            return true
+            return SimpleResponse(true, 201)
         }
-        catch (ex: Exception){
+        catch (ex: RetrofitError){
             Log.d("custom", ""+ex.toString())
+            println(ex.message)
+            statusCode = ex.response.status
         }
-        return false
-    }
-
-    override fun getSavedPlaces(userIndex: UserIndex): MutableList<PlaceResponse> {
-        return placeService.getPlaces(userIndex.getToken(), userIndex.fromIndex, userIndex.toIndex)
+        return SimpleResponse(false, statusCode)
     }
 
     override fun deletePlace(userPlace: UserPlace): Boolean {
@@ -73,6 +77,10 @@ class RestRetrofit: RestInterface {
             Log.d("custom", ""+ex.toString())
         }
         return false
+    }
+
+    override fun getSavedPlaces(token: JWT?, fromIndex:Int, toIndex:Int, keyWord: String?, type: String?): MutableList<PlaceResponse> {
+        return placeService.getPlacesFiltered(token.toString(), fromIndex, toIndex, keyWord, type)
     }
 
 }

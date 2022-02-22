@@ -12,6 +12,9 @@ interface PlaceService {
     @GET("/getPlaces")
     fun getPlaces(@Header("Authorization") token:String, @Query("fromIndex") fromIndex:Int, @Query("toIndex") toIndex:Int): MutableList<PlaceResponse>
 
+    @GET("/getPlaces")
+    fun getPlacesFiltered(@Header("Authorization") token:String, @Query("fromIndex") fromIndex:Int, @Query("toIndex") toIndex:Int, @Query("name") name:String?, @Query("type") type:String?): MutableList<PlaceResponse>
+
     @DELETE("/removePlace")
     fun deletePlace(@Header("Authorization") token:String, @Query("placeName") placeName:String): PlaceResponse
 }

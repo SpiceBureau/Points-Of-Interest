@@ -27,10 +27,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     val placesAdapter = PlacesAdapter()
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
-
-//    var fromIndex = 0
-//    var toIndex = 10
-
+    var placesSearch = PlacesSearch(null, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +43,6 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             override fun loadMoreItems() {
                 isLoading = true
                 getMoreItems(token)
-                isLoading = false
             }
 
             override fun isLastPage(): Boolean {
@@ -104,6 +100,18 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             true
         }
 
+    showFilterButton.setOnClickListener {
+        val filterDialog = FilterDialog(this, placesAdapter.token, placesSearch)
+        filterDialog.showDialog()
+    }
+
+    searchButton.setOnClickListener {
+        isLastPage = false
+        PlacesRepository.listOfPlaces.clear()
+        placesAdapter.notifyDataSetChanged()
+        getMoreItems(token)
+    }
+
     if(PlacesRepository.listOfPlaces.size == 0) {
         getMoreItems(token)
     }
@@ -115,9 +123,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             val rest = RestFactory.instance
             var fromIndex = PlacesRepository.listOfPlaces.size
             var toIndex = fromIndex + 10
-            val userIndex = UserIndex(token, fromIndex, toIndex)
-            println(userIndex)
-            rest.getSavedPlaces(userIndex)
+            rest.getSavedPlaces(token, fromIndex, toIndex, placesSearch.keyWord, placesSearch.typeOfPlace)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -131,6 +137,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
                     placesAdapter.notifyDataSetChanged()
                 }
             }
+            isLoading = false
         }
     }
 
