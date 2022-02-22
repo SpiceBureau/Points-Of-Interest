@@ -22,6 +22,9 @@ public class Place {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "location_latitude")
     private Double locationLatitude;
 
@@ -42,6 +45,8 @@ public class Place {
         this.type = type;
     }
 
+    public void setDescription(String description) { this.description = description; }
+
     public void setLatitude(Double lat) {
         this.locationLatitude = lat;
     }
@@ -49,7 +54,6 @@ public class Place {
     public void setLongitude(Double lng) {
         this.locationLongitude = lng;
     }
-
 
     public Long getId() {
         return id;
@@ -62,6 +66,8 @@ public class Place {
     public String getType() {
         return type;
     }
+
+    public String getDescription() { return description; }
 
     public Double getLocationLatitude() {
         return locationLatitude;
