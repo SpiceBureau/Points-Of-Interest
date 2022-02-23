@@ -49,22 +49,40 @@ class LoginScene : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val user = UserShort(userName, password)
                     val rest = RestFactory.instance
-                    val token = rest.loginUser(user)
+                    val response = rest.loginUser(user)
 
                     withContext(Dispatchers.Main) {
-                        if (token != null) {
+                        if (response.passed) {
                             val loadingActivity = LoadingActivity()
                             val intent = Intent(this@LoginScene, loadingActivity::class.java)
-                            intent.putExtra("token", token)
+                            intent.putExtra("token", response.jwtToken)
                             startActivity(intent)
                             finish()
                         } else {
-                            val toast = Toast.makeText(
-                                this@LoginScene,
-                                "Login failed: wrong username or password.",
-                                Toast.LENGTH_LONG
-                            )
-                            toast.show()
+                            if(response.status == 406) {
+                                val toast = Toast.makeText(
+                                    this@LoginScene,
+                                    "Login failed: wrong username or password.",
+                                    Toast.LENGTH_LONG
+                                )
+                                toast.show()
+                            }
+                            else if(response.status == 403){
+                                val toast = Toast.makeText(
+                                    this@LoginScene,
+                                    "Email not verified. Check your email inbox.",
+                                    Toast.LENGTH_LONG
+                                )
+                                toast.show()
+                            }
+                            else {
+                                val toast = Toast.makeText(
+                                    this@LoginScene,
+                                    "Error occured. Try again.",
+                                    Toast.LENGTH_LONG
+                                )
+                                toast.show()
+                            }
                         }
                     }
                 }

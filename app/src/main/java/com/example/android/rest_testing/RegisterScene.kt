@@ -68,7 +68,7 @@ class RegisterScene : AppCompatActivity() {
                     val rest = RestFactory.instance
                     val result = rest.registerUser(user)
                     withContext(Dispatchers.Main){
-                        if(result){
+                        if(result.passed){
                             val extras = Bundle()
                             extras.putString("username", "null")
                             val loginActivity = LoginScene()
@@ -79,8 +79,22 @@ class RegisterScene : AppCompatActivity() {
                             finish()
                         }
                         else{
-                            val toast = Toast.makeText(this@RegisterScene, "Registration failed: username or email are already used.", Toast.LENGTH_LONG)
-                            toast.show()
+                            if(result.status == 406) {
+                                val toast = Toast.makeText(
+                                    this@RegisterScene,
+                                    "Registration failed: username or email are already used.",
+                                    Toast.LENGTH_LONG
+                                )
+                                toast.show()
+                            }
+                            else{
+                                val toast = Toast.makeText(
+                                    this@RegisterScene,
+                                    "Error occured, try again.",
+                                    Toast.LENGTH_LONG
+                                )
+                                toast.show()
+                            }
                         }
                     }
                 }

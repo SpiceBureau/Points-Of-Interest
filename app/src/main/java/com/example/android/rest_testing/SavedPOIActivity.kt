@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.example.android.rest_testing.net.retrofit.PlaceResponse
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_saved_poiactivity.*
 import kotlinx.coroutines.*
+import retrofit.RetrofitError
 
 class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -119,15 +121,32 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     }
 
     private fun getMoreItems(token: JWT) {
-        var savedPlaces = CoroutineScope(Dispatchers.IO).async {
+        val savedPlaces = CoroutineScope(Dispatchers.IO).async {
             val rest = RestFactory.instance
-            var fromIndex = PlacesRepository.listOfPlaces.size
-            var toIndex = fromIndex + 10
+            val fromIndex = PlacesRepository.listOfPlaces.size
+            val toIndex = fromIndex + 10
             rest.getSavedPlaces(token, fromIndex, toIndex, placesSearch.keyWord, placesSearch.typeOfPlace)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            var places = savedPlaces.await()
+            var places = mutableListOf<PlaceResponse>()
+            try {
+                places = savedPlaces.await()
+            }
+            catch (ex:RetrofitError){
+                withContext(Dispatchers.Main) {
+                    val statusCode = ex.response.status
+                    if (statusCode == 401) {
+                        val toast = Toast.makeText(this@SavedPOIActivity, "Authentification failed. Login again.", Toast.LENGTH_SHORT)
+                        toast.show()
+                        val extras = Bundle()
+                        extras.putString("username", "null")
+                        val intent = Intent(this@SavedPOIActivity, LoginScene::class.java)
+                        intent.putExtras(extras)
+                        ContextCompat.startActivity(this@SavedPOIActivity, intent, Bundle())
+                    }
+                }
+            }
             withContext(Dispatchers.Main){
                 if(places.size == 0){
                     isLastPage = true

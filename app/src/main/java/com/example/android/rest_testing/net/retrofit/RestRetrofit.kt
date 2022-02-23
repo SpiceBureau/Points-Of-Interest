@@ -31,31 +31,35 @@ class RestRetrofit: RestInterface {
         placeService = retrofit.create(PlaceService::class.java)
     }
 
-    override fun loginUser(user: UserShort): JWT? {
+    override fun loginUser(user: UserShort): LoginResponse {
+        val statusCode:Int
         try {
             val jwt = userService.loginUser(user)
-            return jwt
+            return LoginResponse(jwt, true, 200)
         }
-        catch (ex: Exception) {
+        catch (ex: RetrofitError) {
             Log.d("custom", ""+ex.toString())
+            statusCode = ex.response.status
         }
-        return null
+        return LoginResponse(null, false, statusCode)
     }
 
-    override fun registerUser(user: User): Boolean {
+    override fun registerUser(user: User): SimpleResponse {
+        val statusCode:Int
         try{
             var registeredUser = userService.registerUser(user)
             println(registeredUser)
-            return true
+            return SimpleResponse(true, 201)
         }
-        catch (ex: Exception) {
+        catch (ex: RetrofitError) {
             Log.d("custom", ""+ex.toString());
+            statusCode = ex.response.status
         }
-        return false
+        return SimpleResponse(false, statusCode)
     }
 
     override fun savePlace(userPlace: UserPlace, context: Context): SimpleResponse {
-        var statusCode:Int
+        val statusCode:Int
         try {
             var savedLocation = placeService.savePlace(userPlace.getToken(), userPlace.getPlace())
             return SimpleResponse(true, 201)
@@ -68,15 +72,17 @@ class RestRetrofit: RestInterface {
         return SimpleResponse(false, statusCode)
     }
 
-    override fun deletePlace(userPlace: UserPlace): Boolean {
+    override fun deletePlace(userPlace: UserPlace): SimpleResponse {
+        val statusCode:Int
         try {
             placeService.deletePlace(userPlace.getToken(), userPlace.getPlaceName())
-            return true
+            return SimpleResponse(true, 200)
         }
-        catch (ex: Exception){
+        catch (ex: RetrofitError){
             Log.d("custom", ""+ex.toString())
+            statusCode = ex.response.status
         }
-        return false
+        return SimpleResponse(false, statusCode)
     }
 
     override fun getSavedPlaces(token: JWT?, fromIndex:Int, toIndex:Int, keyWord: String?, type: String?): MutableList<PlaceResponse> {

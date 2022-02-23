@@ -90,8 +90,11 @@ public class PointOfInterestController {
         }
 
         user = pointOfInterestService.getUser(user.getUsername());
-        if(!user.isEnabled())
-            return returnError("user not activated");
+        if(!user.isEnabled()) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "user not activated");
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+        }
 
         UserDetails userDetails = pointOfInterestService.loadUserByUsername(user.getUsername());
         final String token = jwtUtils.generateToken(userDetails);
