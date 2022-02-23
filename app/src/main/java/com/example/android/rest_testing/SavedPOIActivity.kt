@@ -29,7 +29,6 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     val placesAdapter = PlacesAdapter()
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
-//    var placesSearch = PlacesSearch(null, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

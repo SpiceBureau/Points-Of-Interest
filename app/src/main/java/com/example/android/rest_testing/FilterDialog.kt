@@ -15,7 +15,6 @@ class FilterDialog(context:Context, jwtToken:JWT?):Dialog(context) {
     init {
         dialog = Dialog(context)
         token = jwtToken
-//        PlacesSearch= PlacesSearchearch
     }
 
     fun showDialog(){
@@ -59,6 +58,5 @@ class FilterDialog(context:Context, jwtToken:JWT?):Dialog(context) {
     companion object{
         var dialog:Dialog? = null
         var token:JWT? = null
-//        var PlacesSearchPlacesSearch? = null
     }
 }
