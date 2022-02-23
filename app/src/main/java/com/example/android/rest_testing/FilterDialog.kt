@@ -11,11 +11,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FilterDialog(context:Context, jwtToken:JWT?, placesSearch: PlacesSearch):Dialog(context) {
+class FilterDialog(context:Context, jwtToken:JWT?):Dialog(context) {
     init {
         dialog = Dialog(context)
         token = jwtToken
-        places = placesSearch
+//        PlacesSearch= PlacesSearchearch
     }
 
     fun showDialog(){
@@ -26,8 +26,8 @@ class FilterDialog(context:Context, jwtToken:JWT?, placesSearch: PlacesSearch):D
         val keyWordEditText = dialogView.findViewById<EditText>(R.id.keyWordEditText)
         val typeEditText = dialogView.findViewById<EditText>(R.id.typeEditText)
 
-        keyWordEditText.setText(places?.keyWord)
-        typeEditText.setText(places?.typeOfPlace)
+        keyWordEditText.setText(PlacesSearch.keyWord)
+        typeEditText.setText(PlacesSearch.typeOfPlace)
 
         val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
         cancelButton.setOnClickListener {
@@ -38,16 +38,16 @@ class FilterDialog(context:Context, jwtToken:JWT?, placesSearch: PlacesSearch):D
         filterButton.setOnClickListener {
             var keyWordText = keyWordEditText.text.toString()
             if(keyWordText != ""){
-                places?.keyWord = keyWordText
+                PlacesSearch.keyWord = keyWordText
             }
             else
-                places?.keyWord = null
+                PlacesSearch.keyWord = null
             var typeText = typeEditText.text.toString()
             if(typeText != ""){
-                places?.typeOfPlace = typeText
+                PlacesSearch.typeOfPlace = typeText
             }
             else
-                places?.typeOfPlace = null
+                PlacesSearch.typeOfPlace = null
             dismissDialog()
         }
 
@@ -59,6 +59,6 @@ class FilterDialog(context:Context, jwtToken:JWT?, placesSearch: PlacesSearch):D
     companion object{
         var dialog:Dialog? = null
         var token:JWT? = null
-        var places:PlacesSearch? = null
+//        var PlacesSearchPlacesSearch? = null
     }
 }

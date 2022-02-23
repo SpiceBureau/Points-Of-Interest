@@ -29,7 +29,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     val placesAdapter = PlacesAdapter()
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
-    var placesSearch = PlacesSearch(null, null)
+//    var placesSearch = PlacesSearch(null, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +103,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         }
 
     showFilterButton.setOnClickListener {
-        val filterDialog = FilterDialog(this, placesAdapter.token, placesSearch)
+        val filterDialog = FilterDialog(this, placesAdapter.token)
         filterDialog.showDialog()
     }
 
@@ -125,7 +125,7 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
             val rest = RestFactory.instance
             val fromIndex = PlacesRepository.listOfPlaces.size
             val toIndex = fromIndex + 10
-            rest.getSavedPlaces(token, fromIndex, toIndex, placesSearch.keyWord, placesSearch.typeOfPlace)
+            rest.getSavedPlaces(token, fromIndex, toIndex, PlacesSearch.keyWord, PlacesSearch.typeOfPlace)
         }
 
         CoroutineScope(Dispatchers.IO).launch {

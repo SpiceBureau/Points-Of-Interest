@@ -1,9 +1,9 @@
 package com.example.android.rest_testing
 
-class PlacesSearch(
-    var keyWord:String?,
-    var typeOfPlace:String?
-){
+object PlacesSearch{
+    var keyWord:String? = null
+    var typeOfPlace:String? = null
+
     override fun toString(): String {
         return keyWord + " " + typeOfPlace
     }
