@@ -144,9 +144,6 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.worldMapWithPOI -> {
-                    Toast.makeText(applicationContext,
-                        "Treba poslat kroz intent koordinate svih spremljenih lokacija da se tu prikazu",
-                        Toast.LENGTH_SHORT).show()
                     val MapsWithAllPOI = MapsActivityForAllPOI()
                     val intent = Intent(this, MapsWithAllPOI::class.java)
                     //tu intent poslat sa listom lokacija i imenima lokacija da se mogu markerima dat imena

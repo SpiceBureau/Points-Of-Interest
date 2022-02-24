@@ -96,6 +96,12 @@ class SavedPOIActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
                     "Already on this screen",
                     Toast.LENGTH_SHORT
                 ).show()
+                R.id.worldMapWithPOI -> {
+                    val MapsWithAllPOI = MapsActivityForAllPOI()
+                    val intent = Intent(this, MapsWithAllPOI::class.java)
+                    //tu intent poslat sa listom lokacija i imenima lokacija da se mogu markerima dat imena
+                    startActivity(intent)
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
