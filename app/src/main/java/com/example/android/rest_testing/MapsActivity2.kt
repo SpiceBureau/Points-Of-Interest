@@ -33,6 +33,7 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
