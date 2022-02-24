@@ -22,7 +22,7 @@ class RestRetrofit: RestInterface {
     private val placeService: PlaceService
 
     init {
-        val baseURL = "http://" + RestFactory.BASE_IP + ":8080/"
+        val baseURL = "https://" + RestFactory.BASE_IP + "/"
         val retrofit = RestAdapter.Builder()
             .setEndpoint(baseURL)
             .build()
