@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>, ratings: List<String>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     private val locationType = type
     private val token = jwtToken
@@ -37,6 +37,7 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
     private val listOfCoordinates = locL
     private val context = cnt
     private val locationList = locL
+    private val listOfRatings = ratings
     private val userLocationString = userLoc
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -78,6 +79,14 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
         holder.btnMap.setOnClickListener {
             itemClick(LatLng(latLng.get("lat") as Double, latLng.get("lng") as Double))
         }
+
+        holder.itemView.setOnClickListener {
+            println(holder.itemTitle.text)
+        }
+
+        val rating = listOfRatings[position]
+
+
         holder.btnSave.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 val rest = RestFactory.instance

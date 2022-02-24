@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
                         val placeInfo = PlaceInfo(response, applicationContext)
-                        val adapter = ItemAdapter(typeForSearch, token, placeInfo.getListOfNames(), placeInfo.listOfCoordinates, tvLocation.text as String, this@MainActivity){ latlng ->
+                        val adapter = ItemAdapter(typeForSearch, token, placeInfo.getListOfNames(), placeInfo.listOfCoordinates, placeInfo.listOfRatings, tvLocation.text as String, this@MainActivity){ latlng ->
                             val mapsActivity = MapsActivity2()
                             val intent = Intent(this@MainActivity, mapsActivity::class.java)
                             intent.putExtra("latitude", latlng.latitude)
