@@ -16,5 +16,10 @@
             android:icon="@drawable/baseline_public_24"
             android:title="World map" />
 
+        <item
+            android:id="@+id/infoAuthors"
+            android:icon="@drawable/outline_info_24"
+            android:title="About" />
+
     </group>
 </menu>

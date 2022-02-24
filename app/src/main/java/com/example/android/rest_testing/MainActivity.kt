@@ -146,7 +146,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.worldMapWithPOI -> {
                     val MapsWithAllPOI = MapsActivityForAllPOI()
                     val intent = Intent(this, MapsWithAllPOI::class.java)
-                    //tu intent poslat sa listom lokacija i imenima lokacija da se mogu markerima dat imena
+                    startActivity(intent)
+                }
+                R.id.infoAuthors -> {
+                    val AboutActivity = AboutActivity()
+                    val intent = Intent(this, AboutActivity::class.java)
                     startActivity(intent)
                 }
             }
