@@ -10,5 +10,11 @@
             android:id="@+id/myPointOfInterest"
             android:icon="@drawable/ic_baseline_person_24"
             android:title="My points of interest" />
+
+        <item
+            android:id="@+id/worldMapWithPOI"
+            android:icon="@drawable/baseline_public_24"
+            android:title="World map" />
+
     </group>
 </menu>
