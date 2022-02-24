@@ -144,6 +144,11 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
+                R.id.worldMapWithPOI -> {
+                    Toast.makeText(applicationContext,
+                        "Treba poslat kroz intent koordinate svih spremljenih lokacija da se tu prikazu",
+                        Toast.LENGTH_SHORT).show()
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
