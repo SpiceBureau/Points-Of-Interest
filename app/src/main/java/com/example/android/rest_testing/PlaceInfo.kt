@@ -8,6 +8,7 @@ import org.json.JSONObject
 
 class PlaceInfo(response: JSONObject, val context: Context){
     val listOfNames: MutableList<String> = mutableListOf<String>()
+    val listOfRatings: MutableList<String> = mutableListOf<String>()
     val listOfCoordinates: MutableList<Any> = mutableListOf()
     val results = response.getJSONArray("results")
     var nextPageToken: String = "null"
@@ -25,6 +26,13 @@ class PlaceInfo(response: JSONObject, val context: Context){
 
             val geometry: JSONObject = jsonObject.get("geometry") as JSONObject
             val loc = geometry.get("location")
+
+            var rating = "No rating"
+            if(jsonObject.has("rating")){
+                rating = jsonObject.get("rating").toString()
+            }
+            listOfRatings.add(rating)
+
             listOfCoordinates.add(loc)
         }
     }
