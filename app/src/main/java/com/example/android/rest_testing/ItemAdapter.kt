@@ -45,6 +45,7 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
         val btnMap = itemView.findViewById<ImageButton>(R.id.btnMap)
         val btnSave = itemView.findViewById<ImageButton>(R.id.btnSave)
         val tvDistance = itemView.findViewById<TextView>(R.id.tvDistance)
+        val tvRating = itemView.findViewById<TextView>(R.id.tvRating)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -67,6 +68,7 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
         userLocation.longitude = userLocationAsList[1].toDouble()
 
         holder.tvDistance.text = "Distance = " + itemLocation.distanceTo(userLocation).toInt().toString() +" m"
+        holder.tvRating.text = "Rating = " + listOfRatings[position]
 
         val cardView: CardView = holder.itemView.findViewById(R.id.cardView)
         if (position % 2 == 0)
@@ -80,11 +82,9 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
             itemClick(LatLng(latLng.get("lat") as Double, latLng.get("lng") as Double))
         }
 
-        holder.itemView.setOnClickListener {
-            println(holder.itemTitle.text)
-        }
-
-        val rating = listOfRatings[position]
+//        holder.itemView.setOnClickListener {
+//            println(holder.itemTitle.text)
+//        }
 
 
         holder.btnSave.setOnClickListener {
