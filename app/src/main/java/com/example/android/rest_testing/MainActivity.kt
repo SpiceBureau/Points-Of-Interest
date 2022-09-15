@@ -41,10 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
-        val token = intent.extras?.getSerializable("token") as JWT
-        println(token)
-
-//        var user = UserShort("daniel", "test12")
+        //val token = intent.extras?.getSerializable("token") as JWT
 
         val btnSearch = findViewById<Button>(R.id.btnSearch)
         val btnGetLoc = findViewById<Button>(R.id.btnGetLoc)
@@ -132,23 +129,38 @@ class MainActivity : AppCompatActivity() {
 
         navigationView.setNavigationItemSelectedListener { // navigation for drawer menu
             when (it.itemId) {
+//                R.id.pointOfInterestSearch -> Toast.makeText(
+//                    applicationContext,
+//                    "Already on this screen",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//                R.id.myPointOfInterest -> {
+//                    val savedPOIActivity = SavedPOIActivity()
+//                    val intent = Intent(this, savedPOIActivity::class.java)
+//                    intent.putExtra("token", token)
+//                    startActivity(intent)
+//                }
+//                R.id.worldMapWithPOI -> {
+//                    val MapsWithAllPOI = MapsActivityForAllPOI()
+//                    val intent = Intent(this, MapsWithAllPOI::class.java)
+//                    //tu intent poslat sa listom lokacija i imenima lokacija da se mogu markerima dat imena
+//                    startActivity(intent)
+//                }
                 R.id.pointOfInterestSearch -> Toast.makeText(
                     applicationContext,
                     "Already on this screen",
                     Toast.LENGTH_SHORT
                 ).show()
-                R.id.myPointOfInterest -> {
-                    val savedPOIActivity = SavedPOIActivity()
-                    val intent = Intent(this, savedPOIActivity::class.java)
-                    intent.putExtra("token", token)
-                    startActivity(intent)
-                }
-                R.id.worldMapWithPOI -> {
-                    val MapsWithAllPOI = MapsActivityForAllPOI()
-                    val intent = Intent(this, MapsWithAllPOI::class.java)
-                    //tu intent poslat sa listom lokacija i imenima lokacija da se mogu markerima dat imena
-                    startActivity(intent)
-                }
+                R.id.myPointOfInterest -> Toast.makeText(
+                    applicationContext,
+                    "This is unavailable in offline mode",
+                    Toast.LENGTH_SHORT
+                ).show()
+                R.id.worldMapWithPOI -> Toast.makeText(
+                    applicationContext,
+                    "This is unavailable in offline mode",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -197,7 +209,7 @@ class MainActivity : AppCompatActivity() {
                 object : PlaceGetter.VolleyResponseListener {
                     override fun onResponse(response: JSONObject) {
                         val placeInfo = PlaceInfo(response, applicationContext)
-                        val adapter = ItemAdapter(typeForSearch, token, placeInfo.getListOfNames(), placeInfo.listOfCoordinates, placeInfo.listOfRatings, tvLocation.text as String, this@MainActivity){ latlng ->
+                        val adapter = ItemAdapter(typeForSearch, placeInfo.getListOfNames(), placeInfo.listOfCoordinates, placeInfo.listOfRatings, tvLocation.text as String, this@MainActivity){ latlng ->
                             val mapsActivity = MapsActivity2()
                             val intent = Intent(this@MainActivity, mapsActivity::class.java)
                             intent.putExtra("latitude", latlng.latitude)

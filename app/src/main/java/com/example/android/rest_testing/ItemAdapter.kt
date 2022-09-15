@@ -29,10 +29,9 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>, ratings: List<String>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter(type:String, iL: List<String>, locL: List<Any>, ratings: List<String>, userLoc: String, cnt: Context, val itemClick: (LatLng) -> Unit): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     private val locationType = type
-    private val token = jwtToken
     private val itemList = iL
     private val listOfCoordinates = locL
     private val context = cnt
@@ -88,34 +87,11 @@ class ItemAdapter(type:String, jwtToken: JWT, iL: List<String>, locL: List<Any>,
 
 
         holder.btnSave.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                val rest = RestFactory.instance
-                val place = Place(holder.itemTitle.text as String, locationType, itemLocation.latitude, itemLocation.longitude)
-                val userPlace = UserPlace(token, place)
-                val result = rest.savePlace(userPlace, context)
-                withContext(Dispatchers.Main) {
-                    if (result.passed) {
-                        PlacesRepository.listOfPlaces.clear()
-                        val toast = Toast.makeText(context, "Location saved.", Toast.LENGTH_SHORT)
-                        toast.show()
-                    }
-                    else{
-                        if(result.status == 401) {
-                            val toast = Toast.makeText(context,"Authentification failed. Login again.",Toast.LENGTH_SHORT)
-                            toast.show()
-                            val extras = Bundle()
-                            extras.putString("username", "null")
-                            val intent = Intent(context, LoginScene::class.java)
-                            intent.putExtras(extras)
-                            startActivity(context, intent, Bundle())
-                        }
-                        else if(result.status == 406){
-                            val toast = Toast.makeText(context,"Location already saved.",Toast.LENGTH_SHORT)
-                            toast.show()
-                        }
-                    }
-                }
-            }
+            Toast.makeText(
+                context,
+                "This is unavailable in offline mode",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
